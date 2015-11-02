@@ -1,0 +1,59 @@
+
+<form id="search_fm" style="margin: 0px;padding: 0px;">
+<table style="width:1150px;margin-top: 5px;padding: 0px;">
+    <tr>
+        <td>协议编号</td>
+        <td><input name="protocol_num" class="textbox"></td>
+        <td>委托单位</td>
+        <td><input name="client_name" class="textbox"> </td>
+        <td>工程名称</td>
+        <td><input name="project_name" class="textbox"></td>
+        <td>合同编号</td>
+        <td><input name="contract_num" class="textbox"></td>
+    </tr>
+    <tr>
+        <if condition="$type eq 5">
+            <td>付款日期</td>
+            <td><input name="pay_from" class="easyui-datebox"></td>
+            <td>到</td>
+            <td><input name="pay_to"  class="easyui-datebox"> </td>
+
+            <else/>
+            <td>协议日期</td>
+            <td><input name="date_from" class="easyui-datebox"></td>
+            <td>到：</td>
+            <td><input name="date_to" class="easyui-datebox"></td>
+
+        </if>
+        <td>开具发票</td>
+        <td>
+            <select name="is_invoice" class="my-select" >
+                <option value=""></option>
+                <option value="0">未开发票</option>
+                <option value="1">已开发票</option>
+            </select>
+        </td>
+        <td><if condition="$type eq 5">付款类型</if></td>
+        <td>
+            <if condition="$type eq 5">
+
+                <select name="is_pay" class="my-select" >
+                    <option value=""></option>
+                    <option value="1">取报告付费</option>
+                    <option value="3">协议结算</option>
+                    <option value="2">立即支付</option>
+                    <option value="4">挂账</option>
+                </select>
+            </if>
+        </td>
+        <td></td>
+        <td>
+        </td>
+        <td></td>
+        <td>
+        </td>
+    </tr>
+</table>
+
+</form>
+

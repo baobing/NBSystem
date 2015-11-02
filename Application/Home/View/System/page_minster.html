@@ -1,0 +1,141 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+
+<div style="height: 500px;width: 100%;">
+    <table id="dg" title="工程协议列表"
+           style="width:100%;min-height: 100%;;float: left;"
+           toolbar="#toolbar"
+           rownumbers="true" fitColumns="true"
+           singleSelect="true" >
+        <thead>
+        <tr >
+                <th field="account" width="100">账户</th>
+                <th field="name" width="100">姓名</th>
+                <th field="department_name" width="100">部门</th>
+                <th field="minister_seq" width="100">排序</th>
+                <th field="minster_industry_type" width="200" formatter="fm_industry">所属行业类别</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<div id="toolbar">
+    <a  class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="editUnit()">修改信息</a>
+
+</div>
+
+<div id="new_dlg" class="easyui-dialog  " style="width:450px;height:300px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons3">
+    <div class="ftitle">基本信息</div>
+    <form id="new_fm" method="post" novalidate>
+        <div class="fitem">
+            <label>请输入序号:</label>
+            <input name="minister_seq" class="textbox" required="" >
+        </div>
+        <div class="fitem">
+            <label style="float: left">所属部门:</label>
+            <div style="float: left">
+                <volist name="industry" id="vo">
+                    <div>{$vo.content}<input id="industry{$vo.type}"name="industry" type="checkbox" value="{$vo.type}"></div>
+                </volist>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="dlg-buttons3">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUnit()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#new_dlg').dialog('close')"
+       style="width:90px">取消</a>
+</div>
+
+<script type="text/javascript">
+    var industryVar ={$industryJson};
+    $(document).ready(function(){
+        $('#dg').datagrid({
+            url:'__URL__/getMinisterInfo',
+            onDblClickRow: function(index,row){
+                editUnit();
+            }
+        });
+    });
+    var id;
+    function editUnit(){
+        var row = isSelected("#dg");
+        if(row==null) return ;
+        if (row){
+            $('#new_dlg').dialog('open').dialog('setTitle','修改信息');
+            $("[name='minister_seq']").val(row.minister_seq);
+            $("input[name='industry']:checkbox").each(function(){
+                $(this).removeAttr("checked");
+            });
+            var industryType = row.minster_industry_type;
+            var industrys = industryType.split(",");
+            for(var i in industrys){
+                $("#industry"+industrys[i]).attr("checked","checked");
+            }
+            id = row.id;
+        }
+    }
+    //保存确认
+    function saveUnit(){
+
+        var data={};
+        data["id"] = id;
+        data["minister_seq"] = $("[name='minister_seq']").val();
+        data["minster_industry_type"] = $("[name='industry']").val();
+        var str = "";
+        $("input[name='industry']:checkbox").each(function(){
+          //  alert($(this).attr("checked"));
+            if($(this).attr("checked")){
+                str += $(this).val()+","
+            }
+        });
+        data["minster_industry_type"] = str;
+
+        $.post("__URL__/modifySeq",data,function(data){
+            if(data){
+                $("#dg").datagrid("reload");
+                showSuccess();
+                $('#new_dlg').dialog('close')
+            }else{
+                showFail();
+            }
+        });
+
+
+    }
+    function fm_industry(value){
+        var industrys = value.split(",");
+        var str = ""
+        for(var i = 0 ;i < industrys.length - 1;i++){
+            if(str.length > 0) str += ",";
+            var industryName = industryVar[industrys[i]]["content"];
+            str += industryName;
+        }
+       // alert(134);
+        return str;
+    }
+
+</script>
+<style type="text/css">
+    #fm{
+        margin:0;
+        padding:10px 30px;
+    }
+    .ftitle{
+        font-size:14px;
+        font-weight:bold;
+        padding:5px 0;
+        margin-bottom:10px;
+        border-bottom:1px solid #ccc;
+    }
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+    .fitem input{
+        width:250px;
+    }
+</style>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

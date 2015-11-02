@@ -1,0 +1,63 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    $(function(){
+        $('#u_dg').datagrid({
+            url:'__URL__/getCompanyList',
+            onDblClickRow:function(rowIndex, rowData){
+                $('#p_dg').datagrid("reload","__URL__/getProtocolList/id/"+rowData.id);
+                $('#r_dg').datagrid("reload","__URL__/getReChargeList/id/"+rowData.id);
+            }
+        });
+    });
+</script>
+<style> .panel{float: left;margin-left: 2%;}</style>
+<div style="width: 95%;height: 95%;position: fixed">
+    <table id="u_dg" title="客户账户信息"
+           style="width:47%;min-height: 100%;float: left;"
+           toolbar="#toolbar" pagination="true"
+           rownumbers="true" fitColumns="true"
+           singleSelect="true" pageSize="{$pageSize}"
+           pageList="{$pageList}">
+        <thead>
+        <tr >
+            <th field="company" width="110">单位名称</th>
+            <th field="contact" width="50">联系人</th>
+            <th field="tel" width="50">联系电话</th>
+            <th field="balance" width="50" sortable="true">账户余额</th>
+        </tr>
+        </thead>
+    </table>
+    <table id="p_dg" title="定期结算协议" class="easyui-datagrid"
+           style="width:47%;height: 50%;float: left;"
+           toolbar="#toolbar" pagination="true"
+           rownumbers="true" fitColumns="true"
+           singleSelect="true" pageSize="10"
+           pageList="[2,5,10,20,50,100]">
+        <thead>
+        <tr >
+            <th field="project_name" width="50">工程名称</th>
+            <th field="protocol_num" width="50">协议书号</th>
+            <th field="price" width="50">费用</th>
+            <th field="date" width="50">协议日期</th>
+        </tr>
+        </thead>
+    </table>
+    <table id="r_dg" title="充值记录" class="easyui-datagrid"
+           style="width:47%;height: 50%;float: left;"
+           toolbar="#toolbar" pagination="true"
+           rownumbers="true" fitColumns="true"
+           singleSelect="true" pageSize="10"
+           pageList="[2,5,10,20,50,100]">
+        <thead>
+        <tr >
+            <th field="rc_person" width="50">充值人</th>
+            <th field="user_name">操作员</th>
+            <th field="rc_cnt" width="50">金额</th>
+            <th field="rc_date" width="50">充值时间</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

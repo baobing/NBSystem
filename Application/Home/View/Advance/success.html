@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link href="__PUBLIC__/Flat-UI/dist/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <title>{$company}</title>
+</head>
+<body>
+<img src="__PUBLIC__/pic/login_background.jpg" style="width:100%;height: 200px;"  >
+<div class="row" style="margin-top: 50px;">
+    <div class="col-md-6 col-md-offset-3" >
+        <div class="col-md-6 ">
+            <div class="page-header">
+                <h2>注册成功</h2>
+                <h5>注册信息已提交，请等待工作人员审核。</h5>
+            </div>
+            <p>&nbsp;账&nbsp;户&nbsp;名 ：{$user.account}</p>
+            <p>注册密码：{$user.password}</p>
+            <p>真实姓名：{$user.real_name}</p>
+        </div>
+        <div class="col-md-4 col-md-offset-2" style="margin-top: 40px;">
+            <div class="tile">
+                <div class="col-md-8">
+                    <img src="__PUBLIC__/Flat-UI/img/icons/svg/pencils.svg" alt="Pensils" class="tile-image">
+                </div>
+
+                <div class="col-md-9" style="margin-top: 20px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

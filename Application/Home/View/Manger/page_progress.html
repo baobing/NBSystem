@@ -1,0 +1,29 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+
+<script>
+    $(function() {
+        $("#dg").datagrid({
+            "url":"{:U('Query/getSampleList','task=1')}",
+            view: detailview,
+            detailFormatter: function(rowIndex, rowData){
+                return '<div id="ddv-' + rowIndex + '" style="padding:5px 0"></div>';
+            },onExpandRow: function(index,row){
+                $('#ddv-'+index).panel({
+                    border:false,
+                    cache:false,
+                    href:'__URL__/sampleDetail/id/'+row.s_id,
+                    onLoad:function(){
+                        $('#dg').datagrid('fixDetailRowHeight',index);
+                    }
+                });
+            }
+        })
+    });
+    function sampleSearchClick(){
+        var data=serializeObject("#toolbar");
+        $("#dg").datagrid("load",data);
+    }
+</script>
+<include file="table_sample" xmlns="http://www.w3.org/1999/html"/>
+<include file="toolbar_sample" xmlns="http://www.w3.org/1999/html"/>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

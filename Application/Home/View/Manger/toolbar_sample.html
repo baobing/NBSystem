@@ -1,0 +1,38 @@
+<form id="toolbar" style="margin: 0px;padding: 0px;">
+    <div>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="sampleSearchClick()">搜索</a>
+        <a href="__URL__/getExcelTask" class="easyui-linkbutton" iconCls="icon-print" plain="true" >Excel导出</a>
+        <table >
+            <table style="width: 1000px;margin-top: 5px;">
+                <tr >
+                    <td>样品编号：</td>
+                    <td><input name="sample_num" class="textbox"></td>
+                    <td>样品名称：</td>
+                    <td><input name="sample_name" class="textbox"></td>
+                    <td>检测项目：</td>
+                    <td><input name="test_item" class="textbox"></td>
+                    <td>试验人：</td>
+                    <td>
+                        <select name="tester" class="my-select">
+                            <option value="">全部</option>
+                            <volist name="tester" id="vo">
+
+                                <option value="{$vo.id}">{$vo.name}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
+                <tr >
+                    <td>截止日期：</td>
+                    <td><input name="dead_from" class="easyui-datebox"></td>
+                    <td>到：</td>
+                    <td><input name="dead_to" class="easyui-datebox"></td>
+                    <td>协议编号</td>
+                    <td><input name="protocol_num" class="textbox"></td>
+                    <td>委托单位</td>
+                    <td><input name="client_name" class="textbox"></td>
+                </tr>
+            </table>
+        </table>
+    </div>
+</form>

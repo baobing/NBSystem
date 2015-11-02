@@ -1,0 +1,50 @@
+<div id="toolbar" >
+    <a href="javascript:void(0)" id="btn_search" class="easyui-linkbutton" plain="true" iconCls="icon-search" onclick="btnSearchClick()">搜索</a>
+    <a href="__URL__/getExcelRC" class="easyui-linkbutton" iconCls="icon-print" plain="true" >Excel导出</a>
+    <form id="search_fm" style="margin: 0px;padding: 0px;">
+        <table style="width:1000px;">
+            <tr>
+                <td>协议编号：</td>
+                <td><input name="protocol_num" class="textbox"></td>
+                <td>委托单位：</td>
+                <td><input name="client_name" class="textbox"> </td>
+                <td>受检单位：</td>
+                <td><input name="inspected"   class="textbox"> </td>
+                <td>工程名称：</td>
+                <td><input name="project_name" class="textbox"></td>
+            </tr>
+            <tr>
+                <if condition="$type eq 5">
+
+                    <td>付款日期：</td>
+                    <td><input name="pay_from" class="easyui-datebox"></td>
+                    <td>到：</td>
+                    <td><input name="pay_to"  class="easyui-datebox"> </td>
+                    <else/>
+                    <td>协议日期：</td>
+                    <td><input name="date_from" class="easyui-datebox"></td>
+                    <td>到：</td>
+                    <td><input name="date_to" class="easyui-datebox"></td>
+                </if>
+                <td>付款类型：</td>
+                <td>
+                    <select name="is_pay" class="my-select" >
+                        <option value="">全部</option>
+                        <option value="1">取报告付费</option>
+                        <option value="3">协议结算</option>
+                        <option value="2">立即支付</option>
+                    </select>
+                </td>
+                <td>支付方式：</td>
+                <td>
+                    <select name="terms_pay" class="my-select" >
+                        <option value="">全部</option>
+                        <option value="1">现金</option>
+                        <option value="2">刷卡</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+

@@ -1,0 +1,40 @@
+<form id="toolbar">
+    <div>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="sampleSearchClick()">搜索</a>
+        <if condition="$step eq 1">
+            <if condition="$type eq 0">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="btnClickAssign()">分配任务</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="btnClickTransfer()">转交任务</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-back" plain="true" onclick="btnClickBack()">退回收发室</a>
+            </if>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" plain="true" onclick="showTask('__APP__/Home/Progress/showTask')">任务书</a>
+        </if>
+        <if condition="$step eq 2">
+            <if condition="$type neq 2">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="showTest('__APP__/Home/Progress/showTest')">编写检测报告</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="finishTest()">完成试验</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="finalTest()">最终报告</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" plain="true" onclick="showTask('__APP__/Home/Progress/showTask')">任务书</a>
+                <elseif condition="$type eq 2"/>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit28Report()">编写28天报告</a>
+            </if>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-back" plain="true" onclick="btnClickBack()">退回报告</a>
+        </if>
+        <if condition="$step eq 3">
+            <if condition="$type eq 0">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="showCheck()">批阅报告</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok"   plain="true" onclick="finishTest()">通过报告</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-no"   plain="true" onclick="refuseTest('{:U(\'refreshStep\')}')">驳回报告</a>
+            </if>
+        </if>
+        <if condition="$step eq 4">
+            <if condition="$type eq 0">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="showCheck()">批阅报告</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok"   plain="true" onclick="finishTest()">通过报告</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-no"   plain="true" onclick="refuseTest('{:U(\'refreshStep\')}')">驳回报告</a>
+            </if>
+        </if>
+
+        <include file="toolbar_text"/>
+    </div>
+</form>

@@ -1,0 +1,231 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+
+<style>
+    #p_dg th{width: 100px;}
+    #toolbar tr td:nth-child(even){width: 80px;}
+    #toolbar tr td:nth-child(odd){width: 150px;}
+    #toolbar tr td input,select{width: 145px}
+</style>
+<script>
+    var industry_type={$industry_type};
+    $(function(){
+        if("{$type}"=="0"){
+            $('#dg').datagrid({
+                url:"__URL__/getProtocolList/prt/1/nums/1",title:"协议书列表",
+                onDblClickRow:function(rowIndex, rowData){
+                    protocolBtnClick();
+                },
+                view: detailview,
+                detailFormatter: function(rowIndex, rowData){
+                    return '<div id="ddv-' + rowIndex + '" style="padding:5px 0"></div>';
+                },onExpandRow: function(index,row){
+                    $('#ddv-'+index).panel({
+                        border:false,
+                        cache:false,
+                        href:'__URL__/sampleDetail/protocol_num/'+row.protocol_num,
+                        onLoad:function(){
+                            $('#dg').datagrid('fixDetailRowHeight',index);
+                        }
+                    });
+                }
+            });
+        }else if("{$type}"=="1" || "{$type}"=="3"||"{$type}" == "5"||"{$type}" == "6"){ // 5收发等级表
+            var data = {};
+            data["url"] = "__URL__/getSampleList/sample/1";
+            if("{$is_printed}"!=""){
+                data["url"] += "/is_printed/{$is_printed}/finished/1";
+            }
+            data["title"] = "检测报告列表";
+            if("{$type}" == "5"){
+                data["title"] = "收发登记表";
+            }
+            data["onDblClickRow"] = function(rowIndex, rowData){
+                sampleBtnClick();
+            };
+            data["rowStyler"]=function(index,row){
+                if (row.priority == 1){
+                    return 'color:red;'; // return inline style
+                }
+            }
+            $('#dg').datagrid(data);
+        }else if("{$type}"=="2"){
+            $('#dg').datagrid({
+                url: "__URL__/getProtocolList/protocol_step/1", title: "协议书列表",
+                onDblClickRow: function (rowIndex, rowData) {
+                    saveBtnClick();
+                }
+            });
+        }
+        $('#query_btn').click(function(){
+            queryBtnClick();
+
+        });
+        $('#save_btn').click(function(){
+            saveBtnClick();
+        });
+        $('#del_btn').click(function(){
+            delBtnClick();
+        });
+        $('#protocol_btn').click(function(){
+                protocolBtnClick();
+        });
+        $('#sample_btn').click(function(){
+            sampleBtnClick();
+        });
+        $('#take_btn').click(function(){
+            takeBtnClick();
+        });
+        $("#setPriority").click(function(){
+            setPriority();
+        });
+    });
+    function takeBtnClick(){             //取走报告点击事件
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+        }else if(row.step<5) {
+            $.messager.alert("操作提示",'报告未完成！');
+        }else if(row.step!=5) {
+            $.messager.alert("操作提示",'报告已取走！');
+        }else if((row.is_pay=0||row.is_pay==1||row.is_pay==2)&&row.payed==0) {
+            $.messager.alert("操作提示",'未付款！');
+        } else {
+
+            if(row.take_type == "邮寄"){var str="快递编号：<input id='number'>";}
+            else {var str="取报告人姓名：<input id='number' value='"+row.send_person+"'>";}
+            $.messager.confirm("操作提示",str,function(){
+                var data = $("#number").val();
+                var send_data={id:row.id};
+                if(row.take_type == "邮寄"){
+                    send_data["step"]=7;
+                    send_data["send_num"]=data;
+                }else {
+                    send_data["step"]=6;
+                    send_data["take_person"]=data;
+                }
+                $.post("{:U('Progress/refreshStep')}",send_data,function(data){
+                    if(data){
+                        showSuccess();
+                        $('#dg').datagrid('reload');
+
+                    }else{
+                        showFail();
+                    }
+                });
+
+            });
+        }
+    }
+    function sampleBtnClick(){
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+        }else{
+            if("{$type}" == "6"){
+                $.post("__URL__/printed",{id:row.id},function(data){});
+                $('#dg').datagrid('reload');
+            }
+            var iWidth=1200; //弹出窗口的宽度;
+            var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+            var iHeight=window.screen.availHeight-100; //弹出窗口的高度;
+            var url="__APP__/Home/Progress/showSample/id/"+row.id+"/seq/0";
+            window.open(url, "check_sample"+row.sample_num,
+                    "height="+iHeight+",width=1200,left="+iLeft);
+        }
+    }
+    function protocolBtnClick(){
+
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+        }else{
+            var iWidth=1200; //弹出窗口的宽度;
+
+            var iHeight=window.screen.availHeight-100; //弹出窗口的高度;
+            var iTop = (window.screen.availHeight-30-iHeight)/2; //获得窗口的垂直位置;
+            var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+            window.open("__APP__/Home/Progress/showProtocol/id/"+row.id+"/curr/0","protocol"+row.id,
+                    "height="+iHeight+",width=1200,left="+iLeft);
+        }
+    }
+    function delBtnClick(){
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+        }else{
+            $.messager.confirm("操作提示",'确认删除'+row.protocol_num+'委托协议书么？',function(is){
+                if(is){
+                    $.post('__APP__/Home/Protocol/delProtocol',{'id':row.id},function(data){
+                        if(data){
+                            $('#dg').datagrid('reload');
+                        }
+                        else {
+                            showFail()
+                        }
+                    });
+                }
+            });
+        }
+    }
+    function saveBtnClick(){
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+            return;
+        }
+
+        location.href='__APP__/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/2';
+        if("{$type}"=="2"){
+            location.href='__APP__/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/1';
+        }
+    }
+    function queryBtnClick(){
+        var date_from=$('input[name="date_from"]').val();
+        var date_to=$('input[name="date_to"]').val();
+        if((date_from=="")^(date_to=="")){
+            $.messager.alert("操作失误","日期不全！");return;
+        }
+        if(date_from>date_to){
+            $.messager.alert("操作失误","日期区间有误！");return;
+        }
+
+        var data=mySerializeObject('#toolbar');
+        $('#dg').datagrid('load',data);
+
+    }
+    function setPriority(){
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+            return;
+        }
+        $.post("__URL__/setPriority",{id:row.id},function(data){
+           if(data){
+               $('#dg').datagrid("reload");
+               showSuccess();
+           } else{
+               showFail();
+           }
+        });
+    }
+</script>
+<form id="toolbar">
+    <div style="width:900px;">
+        <include file="Query:toolbar_btn1" xmlns="http://www.w3.org/1999/html"/>
+        <if condition="$type eq 0 or $type eq 2">
+            <include file="Query:toolbar_text1" xmlns="http://www.w3.org/1999/html"/>
+            <else/><include file="Query:toolbar_text2" xmlns="http://www.w3.org/1999/html"/>
+        </if>
+
+    </div>
+</form>
+<div style="height: 85%;;width: 96%;position: fixed;">
+    <if condition="$type eq 0 or $type eq 2">
+        <include file="Query:p_table" xmlns="http://www.w3.org/1999/html"/>
+        <else/>
+        <include file="Query:s_table" xmlns="http://www.w3.org/1999/html"/>
+    </if>
+</div>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>
+
+

@@ -1,0 +1,63 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    $(function() {
+        var data={};
+        if('{$type}'==0){
+            data["url"]="__APP__/Home/Query/getListSample/step/3/permission/4";
+            data["onDblClickRow"]=function(){
+                showCheck();
+            }
+            data["singleSelect"]=0;
+        }else{
+            data["url"]="__APP__/Home/Query/getListSample/checked/1/permission/4";
+        }
+        data["rowStyler"]=function(index,row){
+            if (row.priority == 1){
+                return 'color:red;'; // return inline style
+            }
+        }
+        $('#s_dg').datagrid(data);
+    });
+
+    function showCheck(){
+        var row=$("#s_dg").datagrid("getSelected");
+        if(row==null) {
+            $.messager.alert("操作提示","请先选择一行！！");
+            return ;
+        }
+        if(row){
+            var iWidth=1200; //弹出窗口的宽度;
+            var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+            var iHeight=window.screen.availHeight-100; //弹出窗口的高度;
+            var url="__APP__/Home/Progress/showCheck/id/"+row.id+"/type/{$type}/step/{$step}";
+            window.open(url, "check_sample"+row.sample_num,
+                    "height="+iHeight+",width=1200,left="+iLeft);
+        }
+    }
+    function finishTest(){
+        var ids=firstMultiSelect();
+
+        var str='<div 请选择批准人员:</div>' +
+        '<select id="passer" name="passer"  class="my-select" multiple="multiple" style="margin-top: 10px;min-height: 180px;width: 200px;">' +
+        '<volist name="passer" id="vo" key="k">' +
+        '<option value="{$vo.id}"  <if condition="$k eq 1">selected</if>>{$vo.name}</option>' +
+        '</volist>' +
+        '</select>';
+        $.messager.confirm("请选择批准人员",str,function(data){
+            if(data){
+                var passer=$('#passer').val();
+                $.post("{:U(refreshStep)}",{ids:ids,step:4,pass_person:passer[0]},function(data){
+                   if(data) {
+                       $("#s_dg").datagrid('reload');
+                       showSuccess();
+                   } else {
+                       showFail();
+                   }
+                });
+            }
+        });
+    }
+</script>
+<include file="Progress:table_sample" xmlns="http://www.w3.org/1999/html"/>
+<include file="Progress:toolbar"/>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

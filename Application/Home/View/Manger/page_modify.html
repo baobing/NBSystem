@@ -1,0 +1,97 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    $(function() {
+        var data={};
+        data["url"]="__APP__/Home/Query/getSampleList/is_modify/0/finished/1";
+        data["onDblClickRow"]= function(){
+            modifySample();
+        }
+        $('#s_dg').datagrid(data);
+    });
+    function modifySample(){
+        var row=$("#s_dg").datagrid("getSelected");
+        if(row==null) {
+            $.messager.alert("操作提示","请先选择一行！！");
+            return ;
+        }
+        if(row.step >= "{$STEP_TAKE}"){
+            var iWidth=1200; //弹出窗口的宽度;
+            var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+            var iHeight=window.screen.availHeight-100; //弹出窗口的高度;
+            window.open("__URL__/modifyTaked/id/"+row.id, "sample"+row.sample_num,
+                    "height="+iHeight+",width=1200, top=0, left=20");
+
+            $('#s_dg').datagrid("reload");
+        }else{
+            showTest('__APP__/Home/Progress/showTest');
+        }
+
+    }
+</script>
+<div style="height: 85%;;width: 96%;position: fixed;">
+    <table id="s_dg" style="width:100%;min-height: 90%;"
+           rownumbers="true"  singleSelect="true"pagination="true"
+           title="报告列表"toolbar="#toolbar"
+           pageSize="{$pageSize}" pageList="{$pageList}">
+        <thead>
+        <th field="sample_num" width="100px;" >样品编号</th>
+        <th field="step"  width="100px;" formatter="fmStep">报告实时状态</th>
+        <th field="sample_name"width="100px;" >样品名称</th>
+        <th field="test_item"  width="100px;" >检测项目</th>
+        <th field="test_basis" width="100px;" >检测依据</th>
+        <th field="stake_mark" width="100px;" >现场桩号/结构部位</th>
+        <th field="molding_date"width="100px;" >取样/成型日期</th>
+        <th field="sample_loca"width="100px;" >取样地点</th>
+        <th field="sample_cnt"width="100px;"  >样品数量</th>
+        <th field="sample_desc"width="100px;" >样品描述</th>
+        <th field="sample_format"width="100px;">规格/牌号</th>
+        <th field="producing_area"width="100px;">厂家产地</th>
+        <th field="delegate_cnt" width="100px;"  >代表数量</th>
+        <th field="make_num" width="100px;"> 生产批号</th>
+        <th field="note"   width="100px;" >附加说明</th>
+        <th field="tester_name" width="100px;">试验人</th>
+        </thead>
+    </table>
+</div>
+<form id="toolbar" style="margin: 0px;padding: 0px;">
+    <div>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="sampleSearchClick()">搜索</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="modifySample()">修改报告</a>
+
+        <table style="width: 900px;margin-top: 5px;">
+            <tr >
+                <td>样品编号：</td>
+                <td><input name="sample_num" class="textbox"></td>
+                <td>样品名称：</td>
+                <td><input name="sample_name" class="textbox"></td>
+                <td>检测项目：</td>
+                <td><input name="test_item" class="textbox"></td>
+                <td>已取走：</td>
+                <td>
+                    <select name="is_take" class="my-select">
+                        <option value="">全部</option>
+                        <option value="0">否</option>
+                        <option value="1">是</option>
+                    </select>
+                </td>
+            </tr>
+            <tr >
+                <td>截止日期：</td>
+                <td><input name="dead_from" class="easyui-datebox"></td>
+                <td>到：</td>
+                <td><input name="dead_to" class="easyui-datebox"></td>
+                <td>试验人：</td>
+                <td>
+                    <select name="tester" class="my-select">
+                        <option value="">全部</option>
+                        <volist name="tester" id="vo">
+                            <option value="{$vo.id}">{$vo.name}</option>
+                        </volist>
+                    </select>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</form>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

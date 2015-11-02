@@ -1,0 +1,23 @@
+<div style="height: 80%;;width: 100%;position: fixed;">
+    <table id="dg" style="width:100%;min-height: 90%;"
+           rownumbers="true"  singleSelect="true"pagination="true"
+           title="报告列表"toolbar="#toolbar" fitColumns="true"
+           pageSize="{$pageSize}" pageList="{$pageList}">
+        <thead>
+        <th field="sample_num"  >样品编号</th>
+        <th field="step" formatter="fmStep">报告实时状态</th>
+        <th field="deadline" >截止日期</th>
+        <th field="finish_date"  formatter="fm_finish">完成日期</th>
+        <th field="tester_name"  formatter="fm_tester">试验人</th>
+        <th field="check_cnt"  formatter="checkCnt">修改次数</th>
+        <th field="protocol_num"  >协议编号</th>
+        <th field="date" >协议日期</th>
+        <th field="client_name"   >委托单位</th>
+        <th field="project_name" width="150px"  >工程名称</th>
+        <th field="is_pay" formatter="fm_ip">付费类型</th>
+        <th field="sample_name" >样品名称</th>
+        <th field="test_item"   >检测项目</th>
+        <th field="test_basis"  >检测依据</th>
+        </thead>
+    </table>
+</div>

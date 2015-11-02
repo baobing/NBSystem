@@ -1,0 +1,46 @@
+<div class="fitem">
+    <label>联系电话:</label>
+    <input name="tel" class="textbox" >
+</div>
+<div class="fitem">
+    <label>姓名:</label>
+    <input id="name" name="name" class="easyui-validatebox  textbox" required="true">
+</div>
+<div class="fitem">
+    <label>部门:</label>
+    <select  name="department" class="  textbox"  style="padding-right: 20px;" >
+        <volist name="dpt" id="vo">
+            <option value="{$vo.id}">{$vo.name}</option>
+        </volist>
+    </select>
+</div>
+<div class="fitem">
+    <div style="float: left;width: 80px;">权限:</div>
+    <table>
+        <tr>
+            <td>收发人员</td>
+            <td><input name="p1" value="1" type="checkbox" style="width: 30px;"></td>
+            <td>部门主任</td>
+            <td><input name="p2" value="1" type="checkbox" style="width: 30px;"></td>
+        </tr>
+
+        <tr>
+            <td>试验人员</td>
+            <td><input name="p3" value="1" type="checkbox" style="width: 30px;"></td>
+            <td>审核人员</td>
+            <td><input name="p4" value="1" type="checkbox" style="width: 30px;"></td>
+        </tr>
+        <tr>
+            <td>批准人员</td>
+            <td><input name="p5" value="1" type="checkbox" style="width: 30px;"></td>
+            <td>财务人员</td>
+            <td><input name="p6" value="1" type="checkbox" style="width: 30px;"></td>
+        </tr>
+        <tr>
+            <td>管理人员</td>
+            <td><input name="p7" value="1" type="checkbox" style="width: 30px;"></td>
+            <td>系统管理员</td>
+            <td><input name="p9" value="1" type="checkbox" style="width: 30px;"></td>
+        </tr>
+    </table>
+</div>

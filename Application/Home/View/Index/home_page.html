@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{$company}</title>
+    <link href="__PUBLIC__/easyui-master/css/default.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/easyui/themes/icon.css" />
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/easyui-master/themes/default/easyui.css" />
+
+    <script type="text/javascript" src="__PUBLIC__/easyui-master/js/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jgxLoader.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/easyui-master/js/jquery.easyui.min.js"></script>
+
+    <script type="text/javascript" src="__PUBLIC__/easyui-master/js/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/easyui-master/js/outlook2.js"> </script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"> </script>
+    <script type="text/javascript">
+
+
+        var _menus={$menus};
+        //设置登录窗口i
+        $(document).ready(function(){
+            $('#nav').accordion({
+                border:false,
+                onSelect:function(title,index){
+                    getCnt();
+                }
+            });
+        });
+        $.extend($.fn.validatebox.defaults.rules,{
+            m_repassword:{
+                validator:function(v,p){
+                    return v==$('#m_password').val();
+                },message:'密码不一致！'
+            }
+        });
+        $(function() {
+            $('#editpass').click(function() {
+                $('#modify_pw_dlg').dialog('open');
+            });
+            $('#loginOut').click(function() {
+                $.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(r) {
+
+                    if (r) {
+                        location.href = '__URL__/logout';
+                    }
+                });
+            });
+              getCnt();
+             setInterval("getCnt()",120*1000);
+            $('#m_repassword').validatebox({
+                required:true,
+                validType:'m_repassword["1"]'
+            });
+            $('#m_password').validatebox({
+                required:true,
+                validType:'length[6,15]',
+                invalidMessage:'密码长度在6-15之间！'
+            });
+            var url="__URL__/validUser/id/{$user.id}";
+           /* $("#homepageLayout").layout("collapse","east");*/
+        });
+        function getCnt(){
+            $.post("__URL__/getCnt",{},function(data){
+                if(data!=null){
+                    for(var i in data){
+                        $('#cnt'+i).text(data[i]);
+                    }
+                }
+            });
+         }
+        function submitPW(){
+            if($("#modify_pw_fm").form('validate')){
+                var id="{$user.id}";
+                $.post("{:U('User/submitPW')}",{id:id,password:$("#m_password").val(),o_password:$("#password").val()},function(res){
+                    if(res==1) {
+                        showSuccess();
+                        $('#modify_pw_dlg').dialog('close');
+                    }
+                    else if(res=="-1"){
+                        $.messager.alert("操作提示","原始密码错误！！");
+                    }
+                    else showFail();
+                });
+            }
+        }
+    </script>
+
+</head>
+<body id="homepageLayout" class="easyui-layout" style="overflow-y: hidden"  scroll="no">
+<noscript>
+    <div style=" position:absolute; z-index:100000; height:2046px;top:0px;left:0px; width:100%; background:white; text-align:center;">
+        <img src="__PUBLIC__/Baobing/easyui-master/images/noscript.gif" alt='抱歉，请开启脚本支持！' /> </div>
+</noscript>
+<div region="north" split="true" border="false" style="overflow: hidden; height: 30px;
+        background: url(__PUBLIC__/pic/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+        line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+    <span style="float:right; padding-right:20px;" class="head">欢迎 {$user.name}
+         <a href="#" id="editpass">修改密码</a>
+        <a href="#" id="loginOut">安全退出</a></span>
+
+    <span style="padding-left:10px; font-size: 16px; ">
+    <img src="__PUBLIC__/easyui-master/images/blocks.gif" width="20" height="20" align="absmiddle" />
+        在线试验委托系统
+    </span>
+</div>
+<div region="south" split="true" style="height: 30px; background: #D2E0F2; ">
+    <div class="footer">版权所有，翻版必究</div>
+</div>
+<style>
+    .panel-with-icon{text-align: left;padding-left: 30px;}
+</style>
+<div region="west" hide="true" split="true" title="导航菜单" style="width:180px;" id="west">
+    <div id="nav"   class="easyui-accordion">
+        <!--  导航内容 -->
+
+    </div>
+</div>
+<div id="mainPanle" region="center" style="background: #eee; overflow-y:hidden">
+    <div id="tabs" class="easyui-tabs"  fit="true" border="false" >
+        <div title="欢迎使用" style="padding:20px;overflow:hidden; ; " ><br/><br/><br/><br/>
+            <h1 style="font-size:24px;margin-top:50px;font-family: 'microsoft yahei'">欢迎使用在线试验委托系统</h1><br/><br/><br/><br/><br/><br/>
+            <span style="font-size: 30px;font-weight: 600;display: inline-block;color: #f1c40f;width: 100%;text-align: center;">
+                {$company}</span>
+        </div>
+    </div>
+</div>
+
+<!--修改密码窗口-->
+<div id="modify_pw_dlg" class="easyui-dialog  " style="width:320px;height:180px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons1" title="修改密码">
+    <form id="modify_pw_fm" method="post" novalidate>
+        <div class="fitem">
+            <label>原始密码:</label>
+            <input id="password"  type="password" class="easyui-validatebox textbox" required="">
+        </div>
+        <div class="fitem" >
+            <label>新的密码:</label>
+            <input id="m_password" name="password"type="password" class="easyui-validatebox textbox" required=""
+                    oninput="$('#m_repassword').validatebox('validate')">
+        </div>
+        <div class="fitem">
+            <label>密码确认:</label>
+            <input id="m_repassword" type="password" class="easyui-validatebox textbox"required="">
+        </div>
+    </form>
+    <a href="javascript:void(0)" class="easyui-linkbutton c6"  onclick="submitPW()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton"  onclick="javascript:$('#modify_pw_dlg').dialog('close')"
+       style="width:90px">取消</a>
+</div>
+<div id="mm" class="easyui-menu" style="width:150px;">
+    <div id="mm-tabupdate">刷新</div>
+    <div class="menu-sep"></div>
+    <div id="mm-tabclose">关闭</div>
+    <div id="mm-tabcloseall">全部关闭</div>
+    <div id="mm-tabcloseother">除此之外全部关闭</div>
+    <div class="menu-sep"></div>
+    <div id="mm-tabcloseright">当前页右侧全部关闭</div>
+    <div id="mm-tabcloseleft">当前页左侧全部关闭</div>
+    <div class="menu-sep"></div>
+    <div id="mm-exit">退出</div>
+</div>
+</body>
+<style>
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+    .fitem input{
+        width:160px;height: 20px;;
+    }
+</style>
+
+</html>

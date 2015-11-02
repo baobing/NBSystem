@@ -1,0 +1,448 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    var industry_type={$industry_type};
+    var pnum='{$p_num}';
+    var selectIndex=-1;
+    $(function(){
+
+        var buttons = $.extend([], $.fn.datebox.defaults.buttons);
+        buttons.splice(1, 0, {
+            text: '清空',
+            handler: function(target){
+                $(target).datebox("setValue","");
+                $(this).closest("div.combo-panel").panel("close");
+            }
+        });
+
+        $('.easyui-datebox').datebox({buttons: buttons});
+        $(".datebox :text").attr("readonly","readonly");
+        $('.easyui-datebox').datebox('setValue','{$today}');
+
+        $('#p_dg').datagrid({
+            url:"__URL__/getSample/protocol_num/{$protocol_num}",
+          //  data:dataSample,
+            onLoadSuccess:function(data){
+                getPrice(data['rows']);
+                if(data['total']==0){
+                    $('#save_btn').linkbutton('disable');
+                    $('#save_btn').unbind( "click" );
+                }else{
+                    $('#save_btn').click(function(){
+                        saveBtnClick();
+                    });
+                }
+            },
+            onDblClickRow:function(rowIndex){
+                if(selectIndex!=-1){
+                    $('#p_dg').datagrid('endEdit',selectIndex);
+                }
+                $('#p_dg').datagrid('beginEdit',rowIndex);
+                selectIndex=rowIndex;
+            },
+            onClickRow:function(rowIndex){
+                if(selectIndex!=-1){
+                    $('#p_dg').datagrid('endEdit',selectIndex);
+                }
+            }
+        });
+
+
+        if('{$type}'=='0'||"{$type}"=="3"){                    //区分新表单还是已经填写一部分的表单
+            $('#save_btn').linkbutton('disable');
+            $('#add_btn').linkbutton('disable');
+            $('.easyui-datebox').datebox('setValue','{$today}');
+            $('#protocol_num').val("T"+(new Date().getFullYear())+'-');
+            $('#pro_btn').click(function(){
+                proBtnClick();
+            });
+            $('#receive_person').val('{$user_name}');
+        }else {
+            $('#pro_btn').linkbutton('disable');
+            $('#add_btn').click(function(){
+                addBtnClick();
+            });
+        }
+        $("#take_type").change(function(){
+            if($(this).val()=="邮寄"){
+                $('#mail_table').show();
+            }else{
+                $('#mail_table').hide();
+            }
+        });
+        if($('#take_type').val()=="邮寄"){
+            $('#mail_table').show();
+        }else{
+            $('#mail_table').hide();
+        }
+
+        //合同编号 选择事件绑定
+        $("#client,#project_id,#inspected").combobox();
+        $("#contract_num").combobox({
+            onChange:function(newValue,oldValue){
+               getInfoByContractNum(newValue);
+             }
+        });
+        $("#contract_num").combobox("setText","");
+
+
+        //添加上次的信息
+        var protocol = {$protocol};
+        $('#fm').form('load',protocol);
+        if(protocol != null){
+            $("#client").combobox("setValue",protocol["client"]);
+            $("#inspected").combobox("setValue",protocol["inspected"]);
+            $("#project_id").combobox("setValue",protocol["project_id"]);
+            $("#contract_num").combobox("setText",protocol["contract_num"]);
+        }
+    });
+
+    function proBtnClick(){
+        var temp=toFiveBit(pnum);
+        var protocol_num="";
+        var str=$('#protocol_num').val();
+        if(str.charAt(0)=="T"){
+            protocol_num=$('#protocol_num').val() + temp;
+        }else {
+            protocol_num=str;
+        }
+        $.post('__URL__/validProtocolNum',{protocol_num:protocol_num},function(data){
+            if(data){
+                $('#protocol_num').val(protocol_num);
+                $('#add_btn').linkbutton('enable');
+                $('#add_btn').click(function(){
+                    addBtnClick();
+                });
+                $('#pro_btn').linkbutton('disable');
+                $('#pro_btn').unbind('click');
+                $('#protocol_num').attr("readonly","readonly");
+            }else{
+                $.messager.alert("操作提示",protocol_num+"协议书已存在");
+            }
+        });
+    }
+    function saveBtnClick(){
+        if(!$('#fm').form('validate')) {
+            return ;
+        }
+     //   debugger;
+        if(selectIndex!=-1){
+            $('#p_dg').datagrid('endEdit',selectIndex);
+        }
+
+        var obj=new Object();
+        $.each($('#fm').serializeArray(),function(index,param){
+            if(!(param.name in obj)){
+                obj[param.name]=param.value;
+            }
+        });
+
+        obj["client"]=$("#client").combobox("getText");
+        obj["project_id"]=$("#project_id").combobox("getText");
+        obj["inspected"]=$("#inspected").combobox("getText");
+        obj["contract_num"]=$("#contract_num").combobox("getText");
+
+        var notEmptyArr = ["witness_contact","send_person","witness_company","tel","witness_tel"];
+        for(var i in notEmptyArr){
+            if($("input[name='"+notEmptyArr[i]+"']").val() == ""){
+                obj[notEmptyArr[i]] = "/"
+            }
+        }
+
+        var rowData=$('#p_dg').datagrid('getData');
+        obj["rows"]=rowData["rows"];
+
+
+        var url='__URL__/submitProtocol/type/{$type}';
+        if('{$type}'=='2'){
+            url='__URL__/submitProtocol/type/{$type}/id/{$id}';
+        }
+        debugger;
+        $.post(url,obj,function(id){
+            if(id){
+                if("{$advance}"=="1"){              //预委托提交页面跳转
+                    location.href='__APP__/Home/Advance/submitSuccess/protocol_num/'+id;
+                }
+                else if('{$type}'=='2'){           //修改协议保存结束跳转
+                    location.href='__APP__/Home/Query/protocolPage';
+                }else if('{$type}'=='1'){
+                    $('#save_btn').unbind("click");
+                    $('#save_btn').linkbutton('disable');
+                    $.messager.confirm("操作提示", "数据成功保存，打开【委托协议书】吗？", function (data) {
+                        if (data) {
+                            var iWidth=1200; //弹出窗口的宽度;
+                            var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+                            var iHeight=window.screen.availHeight-100; //弹出窗口的高度;
+                            window.open("__APP__/Home/Progress/showProtocol/id/"+id+"/curr/0","protocol"+id,
+                                    "height="+iHeight+",width=1200,left="+iLeft);
+                        }
+                        if("{$protocol_step}"!="1"){
+                            location.href="__APP__/Home/Protocol/addPage";
+                        }else if("{$protocol_step}"=="1"){
+                            location.href='__APP__/Home/Query/pageAdvance';
+                        }
+                    });
+                }
+                showSuccess();
+            }else{
+               showFail();
+            }
+        });
+
+    }
+    function addBtnClick(){
+        var rowData=$('#p_dg').datagrid('getData');
+        var url="__APP__/Home/Sample/selectSample/type/"+$('#industry_type').val()
+                        +'/protocol_num/'+$('#protocol_num').val();
+        var data=serializeObject("#fm");
+        data["client"]=$("#client").combobox("getText");
+        data["project_id"]=$("#project_id").combobox("getText");
+        data["inspected"]=$("#inspected").combobox("getText");
+        data["contract_num"]=$("#contract_num").combobox("getText");
+        $.post('__URL__/saveTempPro',data);
+        location.href=url;
+
+
+    }
+    function getPrice(rowData){
+        var rowNum=rowData.length;
+        var sum=0;
+        for(var i=0;i<rowNum;i++){
+            sum+=parseFloat(rowData[i]['price']);
+        }
+        $('#price').val(sum);
+    }
+    function saveCookies(){
+
+        var data={'witness_contact':$('input[name="witness_contact"]').val(),
+            'send_person':$('input[name="send_person"]').val(),
+            'witness_company':$('input[name="witness_company"]').val(),
+            'witness_tel':$('input[name="witness_tel"]').val(),
+            'tel':$('input[name="tel"]').val()
+        };
+
+        $.cookie('protocol_cookie',data,{ expires: 7, path: '/' }); // 存储 cookie
+
+    }
+    function delBtnClick(){
+
+        var row=$('#p_dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.confirm("操作提示", "请您先选择一行");
+            return;
+        }        var index=$('#p_dg').datagrid('getRowIndex',row);
+        $.messager.confirm("操作提示", "确定删除样品"+row.sample_num+"吗？", function (data) {
+            if (data) {
+              //  $('#p_dg').datagrid('deleteRow',index);
+                $('#p_dg').datagrid('load');
+                $.post("__URL__/delSample",{id:row.id},function(res){
+                    if(res) showSuccess();
+                    else showFail();
+                });
+            }
+
+        });
+    }
+    function getInfoByContractNum(newValue){
+        var obj ={
+            contract_num:newValue
+        };
+        $.post("__URL__/getInfoByContractNum",obj,function(data){
+            $("#client").combobox("setValue",data["client_id"]);
+            $("#inspected").combobox("setValue",data["inspected_id"]);
+            $("#project_id").combobox("setValue",data["project_id"]);
+            $("#send_person").val(data["contact"]);
+            $("#tel").val(data["tel"]);
+        });
+    }
+</script>
+<style>
+    .textbox{
+        height: 20px;
+        margin: 0px;
+        padding: 0px 2px;
+        box-sizing: content-box;
+    }
+    .my-btn-rignt{
+        float: right;width: 100px;height: 30px;
+    }
+    .my-select{
+        width: 150px;border-radius: 3px;height: 22px;border: solid 1px #aaaaaa;
+    }
+</style>
+<div style="margin-left: auto;margin-right: auto;width: 1000px;">
+
+    <form id="fm" action="__URL__/submitProtocol" method="post" >
+        <div class="panel-outside" id="div11">
+            <div  class="easyui-panel" title="委托内容" style="height:160px;width: 100%;">
+                <table style="width: 100%;margin-top: 10px;">
+                    <tr>
+                        <td>协议书编号</td>
+                        <td>
+                            <input name="protocol_num" id="protocol_num"type="text"  class="textbox" style="width: 200px;float: left;" required=""
+                            <if condition="$type neq 0"> readonly</if>>
+                            <div id="pro_btn" class="easyui-linkbutton" data-options="iconCls:'icon-add'"style="width: 70px;height: 24px;float: left;">添加</div>
+                        </td>
+                        <td>协议日期</td>
+                        <td><input name="date"type="text" class="easyui-datebox" style="width:150px"></td>
+                        <td>行业类别</td>
+                        <td>
+                            <select name="industry_type" id="industry_type" class="my-select">
+                                <volist name="industry" id="vo">
+                                    <option value="{$vo.type}">{$vo.content}</option>
+                                </volist>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>委托单位</td>
+                        <td>
+                            <select id="client"  name="client"  panelHeight="auto" style="width: 350px;" onselect="getContractNum()" required="">
+                                <volist name="client" id="vo">
+                                    <option value="{$vo.id}">{$vo.company}</option>
+                                </volist>
+                            </select>
+                        </td>
+                        <td >检验类别</td>
+                        <td>
+                            <select name="check_type"   style="width: 150px;">
+                                <option value="委托">委托</option>
+                                <option value="抽检">抽检</option>
+                                <option value="比对">比对</option>
+                            </select>
+                        </td>
+                        <td>见证人</td>
+                        <td> <input name="witness_contact" type="text"  class="textbox" style="width: 145px;"></td>
+                    </tr>
+                    <tr>
+                    <tr>
+                        <td>受检单位</td>
+                        <td>
+                            <select id="inspected" name="inspected"  panelHeight="auto" style="width: 350px;" required="">
+                                <volist name="client" id="vo">
+                                    <option value="{$vo.id}">{$vo.company}</option>
+                                </volist>
+                            </select>
+                        </td>
+                        <td >送样人</td>
+                        <td>
+                            <input id="send_person"name="send_person" type="text"  class="textbox" style="width: 145px;">
+                        </td>
+                        <td>见证单位</td>
+                        <td> <input name="witness_company" type="text"  class="textbox" style="width: 145px;"></td>
+                    </tr>
+                    <tr>
+                        <td>工程名称</td>
+                        <td>
+                            <select id="project_id" name="project_id"  panelHeight="auto" style="width: 350px;" required="">
+                                <volist name="project" id="vo">
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                </volist>
+                            </select>
+                        </td>
+                        <td >联系电话</td>
+                        <td>
+                            <input id="tel" name="tel" type="text"  class="textbox" style="width: 145px;">
+                        </td>
+                        <td>联系电话</td>
+                        <td> <input name="witness_tel" type="text"  class="textbox" style="width: 145px;"></td>
+                    </tr>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="panel-outside">
+            <div  class="easyui-panel" title="检测报告" style="height:100px;width: 100%;" >
+                <table style="width:45%;border-right: solid 1px #dddddd;float: left;margin-top: 10px;" >
+                    <tr>
+                        <td>报告提取方式</td>
+                        <td>
+                            <select id="take_type" name="take_type" class="my-select" style="width: 100px;">
+                                <option value="自取">自取</option>
+                                <option value="邮寄">邮寄</option>
+                            </select>
+                        </td>
+                        <td >报告数量</td>
+                        <td>
+                            <input name="report_cnt" type="text"  class="easyui-textbox" style="width: 100px;" value="2"></td>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>是否做符合性声明</td>
+                        <td>
+                            <select name="is_conform" class="my-select" style="width: 100px;">
+                                <option value="否">否</option>
+                                <option value="是">是</option>
+                            </select>
+                        </td>
+
+                    </tr>
+                    </tr>
+                </table>
+                <table id="mail_table" style="width: 47%;float: left;margin-left: 20px;margin-top: 10px;" >
+                    <tr>
+                        <td style="width: 15%;">收件人</td>
+                        <td style="width: 25%;"><input name="mail_contact" type="text"  class="textbox" style="width: 90%;" ></td>
+
+                        <td style="width: 15%;">邮编</td>
+                        <td style="width: 30%;"><input name="mail_number" type="text"  class="textbox" style="width: 90%;" ></td>
+                    </tr>
+                    <tr>
+                        <td >联系电话</td>
+                        <td><input name="mail_tel" type="text"  class="textbox" style="width: 90%;" ></td>
+                        <td  colspan="1">邮寄地址</td>
+                        <td colspan="3"> <input name="mail_address" type="text"  class="textbox" style="width: 90%;" ></td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel-outside" >
+            <div >
+            <include file="table_sample"/>
+
+            <div style="width: 15%; float: left;height: 200px;overflow: hidden;">
+                <a  id="add_btn" class="easyui-linkbutton" style="width: 100px;height: 30px;float: right;" >添加样品</a>
+                <div id="del_btn" class="easyui-linkbutton"  onclick="delBtnClick()"
+                     style="width: 100px;height: 30px;margin-top: 15px;float: right;">删除样品</div>
+                <div style="width: 100px;margin-top: 15px;float: right;">
+                    <div style="width: 100px;height: 90px;" class="easyui-panel" title="试验费用">
+                        <input name="price" id="price" style="width: 70px;margin-left: 10px; margin-top: 15px;
+                border-radius: 3px;height: 25px;border: 1px solid #999999;padding-left: 5px;" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="width: 100%;height: 200px;">
+            <div style="float: left">
+                <div class="my-lable">合同编号：</div>
+                <select id="contract_num" name="contract_num"  style="float: left" panelHeight ="auto" >
+                    <volist name="charge" id="vo" key="k">
+                        <option value="{$vo.contract_num}" >{$vo.contract_num}</option>
+                    </volist>
+                </select>
+            </div>
+            <if condition="$advance neq 1">
+                <div class="my-lable" style="margin-left: 10px;">收样人：</div>
+                <select id="receive_person" name="receive_person" class="my-select" style="float: left;height: 25px; padding: 3px;">
+                    <option value="" ></option>
+                    <volist name="receive" id="vo" >
+                        <option value="{$vo.name}" >{$vo.name}</option>
+                    </volist>
+                </select>
+            </if>
+
+            <if condition="$type eq 2">
+                <a  href='__APP__/Home/Query/protocolPage' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
+                <elseif condition="$type eq 1 and $protocol_step eq 1"/>
+                <a  href='__APP__/Home/Query/pageAdvance' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
+                <else/>
+                <a  href='__APP__/Home/Protocol/addPage' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
+            </if>
+
+            <div id="save_btn"class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-save'">保存</div>
+        </div>
+    </form>
+</div>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

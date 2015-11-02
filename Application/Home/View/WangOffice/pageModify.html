@@ -1,0 +1,67 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    var rowNum = -1;
+
+    $(function(){
+        $("#dg").datagrid({url:"__APP__/Home/Query/getSampleList/step/-1"});
+        $("#modify_btn").click(function(){modifyBtnClick()});
+        $("#save_btn").click(function(){saveBtnClick()});
+    });
+    function modifyBtnClick(){
+        var row = $("#dg").datagrid("getSelected");
+        if(!row){
+            $.messager.alert("操作提示","请先选择");
+            return ;
+        }
+        rowNum = $("#dg").datagrid("getRowIndex",row);
+        $("#dg").datagrid("beginEdit",rowNum);
+    }
+    function saveBtnClick(){
+        var rowTemp = $("#dg").datagrid("getSelected");
+        var rowNumTemp = $("#dg").datagrid("getRowIndex",rowTemp);
+        if(rowNumTemp != rowNum){
+            $.messager.alert("操作提示","该行未被修改");
+            return ;
+        }
+
+        $("#dg").datagrid("endEdit",rowNum);
+        var rows = $("#dg").datagrid("getRows");
+        var row = rows[rowNum];
+        var var_data=[{type:0,key:"back_reason",value:"#back_reason"}];
+        confirmPost("#dg","确认保存么？<br/>改动原因：<br/>" +
+        "<textarea id='back_reason' style='width: 260px;height: 50px;'>"+row.back_reason+"</textarea>",
+                "__URL__/saveTest",row,null,var_data);
+    }
+</script>
+<div style="height: 100%;;width: 96%;position: fixed;">
+    <table id="dg" style="width:100%;min-height:90%;"
+           rownumbers="true"  singleSelect="true"
+           title="样品列表"pagination="true" toolbar="#toolbar"
+           pageSize="{$pageSize}" pageList="{$pageList}">
+        <thead>
+        <th width="100px" field ="protocol_num" >协议编号</th>
+        <th width="100px" field ="sample_num" >样品编号</th>
+        <th width="100px" field ="sample_name" editor="{type:'text'}">样品名称</th>
+        <th width="100px" field ="test_item"   editor="{type:'text'}">检测项目</th>
+        <th width="300px" field ="test_detail"   editor="{type:'text'}">检测项目(详细)</th>
+        <th width="200px" field ="test_basis"  editor="{type:'text'}">检测依据</th>
+        <th width="100px" field ="stake_mark"  editor="{type:'text'}">现场桩号/结构部位</th>
+        <th width="100px" field ="molding_date" editor="{type:'text'}">取样/成型日期</th>
+        <th width="100px" field ="sample_loca" editor="{type:'text'}">取样地点</th>
+        <th width="100px" field ="sample_cnt"  editor="{type:'text'}">样品数量</th>
+        <th width="100px" field ="sample_desc" editor="{type:'text'}">样品描述</th>
+        <th width="100px" field ="sample_format"editor="{type:'text'}">规格/牌号</th>
+        <th width="100px" field ="producing_area"editor="{type:'text'}">厂家/产地</th>
+        <th width="100px" field ="delegate_cnt"   editor="{type:'text'}">代表数量</th>
+        <th width="100px" field ="make_num"   editor="{type:'text'}">生产批号</th>
+        <th width="100px" field ="price"    editor="{type:'text'}">检测费用(元)</th>
+        <th width="100px" field ="note"     editor="{type:'text'}">附加说明</th>
+        <th width="100px" field ="back_type" editor="{type:'text'}">退样方式</th>
+        </thead>
+    </table>
+</div>
+<div id="toolbar" style="height: 30px;">
+    <a id="modify_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+    <a id="save_btn" class="easyui-linkbutton" iconCls="icon-save" plain="true">保存</a>
+</div>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

@@ -1,0 +1,55 @@
+
+<div id="dlg" class="easyui-dialog" title="付费信息" style="width:430px;height:450px;top:10px;"
+     toolbar="#toolbar"
+     iconCls='icon-save'resizable=true modal=true buttons="#buttons" closed=true>
+    <style>
+        #fm input{width: 250px;}
+    </style>
+    <form id="fm" method="post" novalidate>
+
+        <div class="fitem">
+            <label>协议编号:</label>
+            <textarea id="protocol_nums"  readonly style="width: 250px;border-radius: 3px;height: 40px;"></textarea>
+        </div>
+        <div class="fitem">
+            <label>委托单位:</label>
+            <input  id="client_name" class="textbox" readonly>
+        </div>
+        <div class="fitem">
+            <label>工程名称:</label>
+            <input  id="project_name" class="textbox" readonly>
+        </div>
+        <div class="fitem">
+            <label>费用金额:</label>
+            <input   id="prices" class="textbox" readonly>
+        </div>
+        <div class="fitem">
+            <label>付费方式:</label>
+            <select id="terms_pay" name="terms_pay"  class="my-select" style="width: 255px;" >
+                <option value="1">现金</option>
+                <option value="2">刷卡</option>
+            </select>
+        </div>
+        <div class="fitem">
+            <label>缴费人姓名:</label>
+            <input id="rc_person" name="rc_person" type="text" class="textbox" maxlength="20">
+        </div>
+        <div class="fitem" id="real_div">
+            <label>实际收费:</label>
+             <input id="plan_pay" name="plan_pay" class="textbox" required="" style="width: 170px;">
+            <span style="color: red">折扣：</span>
+            <span style="color: red" id="discount_span"></span>
+            <span style="color: red">折</span>
+        </div>
+        <div class="fitem">
+            <label>发票号:</label>
+            <input id="invoice_num" name="invoice_num" class="textbox" required="" >
+        </div>
+    </form>
+</div>
+<div id="buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveSettle()" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dlg').dialog('close')"
+       style="width:90px">取消</a>
+</div>
+

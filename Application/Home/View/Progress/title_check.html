@@ -1,0 +1,112 @@
+<style>
+    #header {
+        background:#28333c; color:White;  float:left; width:100%;height: 100px;;
+    }
+
+</style>
+<script>
+    var id="{$id}";
+    $(function(){
+        $('#btn_pass').click(function(){
+            passTest();
+        });
+        $('#btn_refuse').click(function(){
+            refuseTest();
+        });
+        $('#btn_finish').click(function(){
+            finishTest();
+        });
+    });
+    function passTest(){
+
+        if(confirm("确认完成试验么？")) {
+            var step;
+            if("{$step}"=="3") step=4;
+            else if("{$step}"==4) step=5;
+            $.post("__APP__/Home/Progress/refreshStep",{ids:[id],step:step},function(data){
+                if(data) {
+                    showSuccess();
+                } else {
+                    showFail();
+                }
+            });
+        }
+
+    }
+    function refuseTest(){
+
+        if("确认驳回报告么？"){
+            $.post("__APP__/Home/Progress/refreshStep",{ids:[id],step:2,refuse_note:"详见报告"},function(data){
+                if(data) {
+                    showSuccess();
+                } else {
+                    showFail();
+                }
+            });
+        }
+
+    }
+    function finishTest(){
+        if(confirm("确认完成报告，并且交给"+$("#check_person").find("option:selected").text()+"审核？")){
+            $.post("__APP__/Home/Progress/refreshStep",{ids:[id],step:3,check_person:$("#check_person").val()},function(data){
+                if(data) {
+                    showSuccess();
+                } else {
+                    showFail();
+                }
+            });
+        }
+    }
+    function toPass(){
+        if(confirm("确认完成报告，并且交给"+$("#passer").val()+"审核？")){
+            $.post("__APP__/Home/Progress/refreshStep",{ids:[id],step:3,passer:$("#passer").val()},function(data){
+                if(data) {
+                    showSuccess();
+                } else {
+                    showFail();
+                }
+            });
+        }
+    }
+</script>
+<div id="header">
+    <div style="width: 1000px;margin-right: auto;margin-left: auto;margin-top:10px; ">
+        <div style="height: 25px;">
+            <div style="width: 300px;float: left"><span style="font-weight: 600;font-size: 15px;">文章名称：</span>{$sample_num}检验报告 </div>
+            <div style="width: 400px;float: right;height: 30px;">
+                <if condition="$step eq 2">
+                  <!--  <label for="check_person" style="margin-left: 10px;">选择审批人员:</label>
+                    <select id="check_person" name="check_person"  class="my-select" style="margin-left: 10px;margin-top: 3px;">
+                        <volist name="checker" id="vo">
+                            <option value="{$vo.id}">{$vo.name}</option>
+                        </volist>
+                    </select>
+                    <a  id="btn_finish" class="easyui-linkbutton c1" iconCls="icon-ok " style="float: right">完成试验</a>-->
+                </if>
+
+                <if condition="$step eq 3 or $step eq 4">
+                 <!--   <a  id="btn_refuse" class="easyui-linkbutton c6" iconCls="icon-no" style="float: right;">驳回报告</a>
+                    <a  id="btn_pass" class="easyui-linkbutton c1" iconCls="icon-ok " style="float: right">通过报告</a>-->
+                </if>
+                <if condition="$step eq 3">
+                  <!--  <div style="float: right;width: 200px;">
+                        <label for="passer" style="margin-left: 10px;">选择批准人员:</label>
+                        <select id="passer" class="my-select" style="margin-left: 10px;margin-top: 3px;">
+                            <volist name="passer" id="vo">
+                                <option value="{$vo.name}">{$vo.name}</option>
+                            </volist>
+                        </select>
+                    </div>-->
+                </if>
+            </div>
+        </div>
+
+        <div style="width: 1000px;word-break: break-all; word-wrap:break-word;clear: left;margin-top: 10px;">
+            <span style="font-weight: 600;font-size: 15px;">文件流转：</span>
+            <volist name="progress" id="vo" key="k">
+                <if condition="$k neq 1">-></if>
+                {$vo.content}
+            </volist>
+        </div>
+    </div>
+</div>

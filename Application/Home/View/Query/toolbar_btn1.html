@@ -1,0 +1,24 @@
+<div style="width: 800px;margin-top: 5px;">
+   <a id="query_btn" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
+    <if condition="$type eq 0 or $type eq 2">
+        <a id="save_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+        <a href="__URL__/getExcelPrt" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a>
+        <elseif condition="$type eq 1 or $type eq 6"/>
+        <a id="sample_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">检测报告</a>
+
+    </if>
+    <if condition="$type eq 1">
+        <a id="take_btn" class="easyui-linkbutton" iconCls="icon-redo" plain="true">取走报告</a>
+        <a href="__URL__/getExcelSample" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a>
+    </if>
+    <if condition="$type eq 0">
+        <a id="protocol_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">协议书</a>
+    </if>
+    <if condition="$type eq 0">
+        <a id="del_btn" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+    </if>
+    <if  condition="$type eq 5">
+        <a href="__URL__/getExcelSample/testDetail/1" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a>
+        <a id="setPriority" class="easyui-linkbutton" iconCls="icon-edit" plain="true">优先试验</a>
+    </if>
+</div>

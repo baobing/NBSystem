@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+<!--    <link href="__PUBLIC__/Flat-UI/dist/css/vendor/bootstrap.min.css" rel="stylesheet">-->
+    <link href="__PUBLIC__/Flat-UI/dist/css/flat-ui.css" rel="stylesheet">
+    <script type="text/javascript" src="__PUBLIC__/easyui-master/js/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/jquery.validate.js"></script>
+    <title>{$company}</title>
+</head>
+<body style=";margin: 0px auto;background: #ffffff">
+    <img src="__PUBLIC__/pic/login_background.jpg" style="width:100%;height: 200px;">
+
+     <style>
+
+         .login-div >div{width: 400px;height: 30px;line-height: 30px;margin-top: 10px;}
+         .login-div span{width: 70px;display: block;float: left;margin-left: 30px;color: #6a6a6a}
+         .login-div input{float: left;width: 150px;padding: 3px;height: 20px;}
+         .login-div .submit-btn{width: 90px;height: 30px;line-height: 30px;margin-right:140px;float: right;margin-top: 15px; }
+         .login-div span{width: 70px;display: block;float: left;margin-left: 30px;color: #6a6a6a}
+         span .error{
+             background:url("__PUBLIC__/easyui-master/themes/icons/no.png") no-repeat 0px 0px;
+             padding-left: 16px;
+         }
+
+
+         /*--------------------*/
+
+         #login_form
+         {
+             background-color: #fff;
+             background-image: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#eee));
+             background-image: -webkit-linear-gradient(top, #fff, #eee);
+             background-image: -moz-linear-gradient(top, #fff, #eee);
+             background-image: -ms-linear-gradient(top, #fff, #eee);
+             background-image: -o-linear-gradient(top, #fff, #eee);
+             background-image: linear-gradient(top, #fff, #eee);
+             height: 240px;
+             width: 400px;
+             margin: 50px 0 0 -230px;
+             padding: 30px;
+             position: absolute;
+
+             left: 50%;
+             z-index: 0;
+             -moz-border-radius: 3px;
+             -webkit-border-radius: 3px;
+             border-radius: 3px;
+             -webkit-box-shadow:
+             0 0 2px rgba(0, 0, 0, 0.2),
+             0 1px 1px rgba(0, 0, 0, .2),
+             0 3px 0 #fff,
+             0 4px 0 rgba(0, 0, 0, .2),
+             0 6px 0 #fff,
+             0 7px 0 rgba(0, 0, 0, .2);
+             -moz-box-shadow:
+             0 0 2px rgba(0, 0, 0, 0.2),
+             1px 1px   0 rgba(0,   0,   0,   .1),
+             3px 3px   0 rgba(255, 255, 255, 1),
+             4px 4px   0 rgba(0,   0,   0,   .1),
+             6px 6px   0 rgba(255, 255, 255, 1),
+             7px 7px   0 rgba(0,   0,   0,   .1);
+             box-shadow:
+             0 0 2px rgba(0, 0, 0, 0.2),
+             0 1px 1px rgba(0, 0, 0, .2),
+             0 3px 0 #fff,
+             0 4px 0 rgba(0, 0, 0, .2),
+             0 6px 0 #fff,
+             0 7px 0 rgba(0, 0, 0, .2);
+         }
+         #login_form:before
+         {
+             content: '';
+             position: absolute;
+             z-index: -1;
+             border: 1px dashed #ccc;
+             top: 5px;
+             bottom: 5px;
+             left: 5px;
+             right: 5px;
+             -moz-box-shadow: 0 0 0 1px #fff;
+             -webkit-box-shadow: 0 0 0 1px #fff;
+             box-shadow: 0 0 0 1px #fff;
+         }
+
+         /*--------------------*/
+         h1
+         {
+             text-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0px 2px 0 rgba(0, 0, 0, .5);
+             text-transform: uppercase;
+             text-align: center;
+             color: #666;
+             margin: 0 0 30px 0;
+             letter-spacing: 4px;
+             font: normal 26px/1 Verdana, Helvetica;
+             position: relative;
+         }
+
+         /*--------------------*/
+
+         fieldset
+         {
+             border: 0;
+             padding: 0;
+             margin: 0;
+         }
+
+         #inputs input
+         {
+             padding: 15px 15px 15px 30px;
+             margin: 0 0 10px 0;
+             width: 323px; /* 353 + 2 + 45 = 400 */
+             border: 1px solid #ccc;
+             -moz-border-radius: 5px;
+             -webkit-border-radius: 5px;
+             border-radius: 5px;
+             -moz-box-shadow: 0 1px 1px #red inset, 0 1px 0 #fff;
+             -webkit-box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+             box-shadow: 0 1px 1px #ccc inset, 0 1px 0 #fff;
+         }
+
+         #account
+         {
+             background-position: 5px -2px !important;
+         }
+
+         #password
+         {
+             background-position: 5px -52px !important;
+         }
+
+         #inputs input:focus
+         {
+             background-color: #fff;
+             border-color: #e8c291;
+             outline: none;
+             -moz-box-shadow: 0 0 0 1px #e8c291 inset;
+             -webkit-box-shadow: 0 0 0 1px #e8c291 inset;
+             box-shadow: 0 0 0 1px #e8c291 inset;
+         }
+
+         /*--------------------*/
+         #actions
+         {
+             margin: 25px 0 0 0;
+         }
+
+
+     </style>
+
+    <form id="login_form" style="font-family: 'microsoft yahei';">
+        <h1 style="font-family: 'microsoft yahei';">在线预委托系统</h1>
+        <fieldset id="inputs">
+            <input id="account"  name="account" type="text" placeholder="Username" autofocus="" required=""><span style="padding-left: 10px"></span>
+            <input id="password" name="password" type="password" placeholder="Password" required=""><span style="padding-left: 10px"></span>
+        </fieldset>
+        <fieldset id="actions">
+            <a onclick="submitInfo()" class="btn btn-large btn-block btn-info" style="cursor: pointer">登录</a>
+            <a href="__URL__/register.html" class="btn btn-large btn-block btn-inverse" style="cursor: pointer" >注册</a>
+            <span id="error_span" style="color: red ;width: 140px;display: none;padding-left: 20px;" >
+                         </span>
+        </fieldset>
+    </form>
+    <script>
+        $(document).ready(function(){
+            $("#login_form").validate({
+                debug:true,
+                errorElement: "em",
+                errorPlacement: function(error, element) {
+                    error.appendTo( element.next("span") );
+                },
+                errorClass:'error',
+                messages: {
+                    account:{required: ""},
+                    password:{required: ""}
+                }
+            });
+        });
+        function submitInfo(){
+
+            if( $("#login_form").valid()){
+                $('#submit_btn').val('正在登录...');
+                $.ajax({
+                    type: 'POST',
+                    url:'__URL__/submitInfo',
+                    data:{account:$('#account').val(),password:$('#password').val()},
+                    success: function(data){
+                      //  alert(data);
+                        if(data==1){
+                            window.location.href='__URL__/index';
+                        }else{
+                            if(data==-1)  $('#error_span').html("账户审核中！");
+                            else if(data==-2)  $('#error_span').html("账户被拒绝！");
+                            else if(data==0)    $('#error_span').html("账户或用户密码错误！");
+                              $('#error_span').show();
+                            $('#submit_btn').val('登录');
+                        }
+                    },
+                    dataType: 'json'
+                });
+            }
+        }
+    </script>
+</body>
+</html>

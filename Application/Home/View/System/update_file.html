@@ -1,0 +1,53 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<style>
+
+
+
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+    .fitem input{
+        width:160px;
+    }
+</style>
+        <script>
+            $(function(){
+                $('#save_btn').click(function(){
+                    var data={pnum:$('#protocol_num').val(),snum:$('#sample_num').val(),company_name:$('#company_name').val()};
+                    $.post('__URL__/saveConfig',data,function(){
+                        location.reload();
+                    });
+                });
+            });
+        </script>
+
+<div class="panel-outside" >
+    <div class="easyui-panel" title="系统参数设置"style="height: 200px;">
+        <div style="width: 500px;height: 50px;margin-top: 30px;margin-left: 50px;">
+            <form id="config_fm" method="post" novalidate>
+                <div class="fitem">
+                    <label>协议书编号:</label>
+                    <input id="protocol_num" name="protocol_num" class="textbox" value="{$data[0]['content']}"  >
+                </div>
+                <div class="fitem">
+                    <label>样品编号:</label>
+                    <input id="sample_num"  name="sample_num" class="textbox" value="{$data[1]['content']}">
+                </div>
+                <if condition="$user.p0 eq 1">
+                    <div class="fitem">
+                        <label>公司名称:</label>
+                        <input id="company_name"  name="company_name" class="textbox" value="{$data[3]['content']}" style="width: 300px;">
+                    </div>
+                </if>
+                <div style="margin-top: 20px;">
+                    <div id="save_btn" class="easyui-linkbutton c6 "  style="width: 100px;margin-left: 150px;">保存</div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

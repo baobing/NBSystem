@@ -1,0 +1,71 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+
+<style> .panel{float: left;margin-left: 2%;}</style>
+<div style="width: 95%;height: 95%;position: fixed">
+    <table id="dg" title="管理员登陆信息" class="easyui-datagrid easyui-resizable"
+           style="width:47%;min-height: 100%;float: left;"
+           url="__URL__/dateList"
+           pagination="true"
+           rownumbers="true" fitColumns="true" singleSelect="true"
+           pageSize="{$pageSize}" pageList="{$pageList}"
+           resizable="true"
+            >
+        <thead>
+        <tr >
+            <th field="account" width="50" sortable="true">账户名</th>
+            <th field="name" width="50" sortable="true">姓名</th>
+        </tr>
+        </thead>
+    </table>
+    <table id="loginfo_dg" title="登陆信息" class="easyui-datagrid easyui-resizable"
+           style="width:47%;min-height: 100%;margin-left: 5px;"
+           toolbar=""
+           pagination="true"
+           rownumbers="true" fitColumns="true" singleSelect="true"
+           pageSize="{$pageSize}"
+           pageList="{$pageList}"
+           resizable="true"
+            >
+        <thead>
+        <tr >
+            <th field="account" width="50">账户名</th>
+            <th field="log_date" width="50" sortable="true">登陆时间</th>
+        </tr>
+        </thead>
+    </table>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#dg').datagrid({
+            onClickRow: function(index,row){
+                $('#loginfo_dg').datagrid('reload','__URL__/loginfo/account/'+row.account);
+            }
+        });
+    });
+</script>
+<style type="text/css">
+    #fm{
+        margin:0;
+        padding:10px 30px;
+    }
+    .ftitle{
+        font-size:14px;
+        font-weight:bold;
+        padding:5px 0;
+        margin-bottom:10px;
+        border-bottom:1px solid #ccc;
+    }
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+    .fitem input{
+        width:160px;
+    }
+</style>
+</body>
+</html>

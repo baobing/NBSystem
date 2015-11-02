@@ -1,0 +1,27 @@
+<div style="height: 100%;;width: 96%;position: fixed;">
+    <table id="dg"  style="width:100%;min-height: 90%;"
+           toolbar="#toolbar" pagination="true"
+           rownumbers="true" fitColumns="true"
+           singleSelect="true" pageSize="{$pageSize}" pageList="{$pageList}" resizable="true">
+        <thead>
+        <tr >
+            <th field="protocol_num">协议编号</th>
+            <th field="check_pay" formatter="fm_ck">审核类型</th>
+            <th field="date" >协议日期</th>
+            <th field="client_name">委托公司</th>
+            <th field="inspected"  >受检单位</th>
+            <th field="project_name">工程名称</th>
+            <th field="send_person">送样人</th>
+            <th field="tel">送样人电话</th>
+            <th field="receive_person">收样人</th>
+            <th field="price">检测费用(元)</th>
+            <th field="payed_price">已收费用(元)</th>
+            <th field="discount_price">折扣费用(元)</th>
+            <th field="plan_pay">缴纳费用(元)</th>
+            <th field="first_price">原始检测费用(元)</th>
+            <th field="back_reason">检测项目变更原因</th>
+            <th field="operator_name">操作员</th>
+        </tr>
+        </thead>
+    </table>
+</div>

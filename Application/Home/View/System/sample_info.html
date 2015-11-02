@@ -1,0 +1,50 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<style>
+
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+    .fitem input{
+        width:160px;
+    }
+</style>
+<div class="panel-outside"  >
+    <div class="easyui-panel" title="样品详细信息文件更新"style="height: 120px;width: 700px;">
+        <div style="width: 500px;height: 50px;margin-top: 30px;margin-left: 50px;">
+            <form
+                 <if condition="$type eq 0">
+                     action="__URL__/saveFile"
+                     <else/>
+                    action="__URL__/uploadSampleInfo"
+                 </if>
+                  enctype="multipart/form-data" method="post" >
+            <input class="easyui-filebox" name="file" data-options="prompt:'选择文件...'" style="width:300px">
+            <input type="submit" value="上传"  class="textbox c6" style="width: 80px;"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="panel-outside" style="position: fixed;height: 70%;">
+
+        <table id="dg"  style="width: 700px;;min-height: 90%;"
+               class="easyui-datagrid" url="__URL__/getFileList/type/{$type}"
+               toolbar="#toolbar" pagination="true"
+               rownumbers="true" fitColumns="true"
+               singleSelect="true" pageSize="{$pageSize}" pageList="{$pageList}" resizable="true">
+            <thead>
+            <tr >
+                <th field="name">文件名称</th>
+                <th field="username">上传者</th>
+                <th field="file_date" >上传日期</th>
+            </tr>
+            </thead>
+        </table>
+
+</div>
+
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

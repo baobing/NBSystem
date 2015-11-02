@@ -1,0 +1,33 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+
+
+<script>
+    $(function(){
+        var data={};
+        data["title"]="取报告付款审批";
+        data["url"]="{:U('Query/getProtocolList?checking=1&permission=7')}";
+        data["onDblClickRow"]= function () {
+            submitResult(10);
+        }
+        $("#dg").datagrid(data);
+    });
+    function submitResult(t){
+        var row=$("#dg").datagrid("getSelected");
+        if(row==null){
+            return ;
+        }
+        var check_pay=parseInt(row.check_pay)+parseInt(t);
+        var str="确认通过吗？";
+        if(t>20) str="<span style='color: red;'>确认拒绝吗？</span>";
+        confirmPost("#dg",str,"__URL__/submitResult",{id:row.id,check_pay:check_pay});
+
+    }
+</script>
+<div style="height: 100%;;width: 96%;position: fixed;">
+    <include file="Manger:table_pay" xmlns="http://www.w3.org/1999/html"/>
+</div>
+<div id="toolbar">
+    <a  class="easyui-linkbutton" plain="true" iconCls="icon-ok" style="margin-left: 10px;" onclick="submitResult(10)">通过</a>
+    <a  class="easyui-linkbutton" plain="true" iconCls="icon-no" style="margin-left: 10px;" onclick="submitResult(20)">拒绝</a>
+</div>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

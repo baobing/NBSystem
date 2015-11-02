@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{$company}</title>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/default.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/easyui/themes/bootstrap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/easyui/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/easyui/demo/demo.css">
+
+
+    <script type="text/javascript" src="__PUBLIC__/js/jquery-1.4.4.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/base.js"></script>
+    <style>
+        .panel{top:0px;}
+    </style>
+</head>
+<body style="margin: 0px;padding: 0px;">
+
+<script language="javascript" type="text/javascript">
+    $(function(){
+        var height=$(window).height();
+        $("#div_page").css("height",height+"px");
+    });
+    function SaveDocument() {
+        document.getElementById("PageOfficeCtrl1").WebSave();
+    }
+
+    //显示痕迹
+    function ShowRevisions() {
+        document.getElementById("PageOfficeCtrl1").ShowRevisions = true;
+    }
+
+    //隐藏痕迹
+    function HiddenRevisions() {
+        document.getElementById("PageOfficeCtrl1").ShowRevisions = false;
+    }
+
+    //领导圈阅签字
+    function StartHandDraw() {
+        document.getElementById("PageOfficeCtrl1").HandDraw.SetPenWidth(5);
+        document.getElementById("PageOfficeCtrl1").HandDraw.Start();
+    }
+    // 插入键盘批注
+    function StartRemark() {
+        var appObj = document.getElementById("PageOfficeCtrl1").WordInsertComment();
+    }
+    //分层显示手写批注
+    function ShowHandDrawDispBar() {
+        document.getElementById("PageOfficeCtrl1").HandDraw.ShowLayerBar(); ;
+    }
+
+    //全屏/还原
+    function IsFullScreen() {
+        document.getElementById("PageOfficeCtrl1").FullScreen = !document.getElementById("PageOfficeCtrl1").FullScreen;
+    }
+
+    //显示标题
+    function ShowTitle() {
+        alert("该菜单的标题是：" + document.getElementById("PageOfficeCtrl1").caption);
+    }
+    function InsertSeal() {
+        try {
+            document.getElementById("PageOfficeCtrl1").ZoomSeal.AddSeal("{$name}");
+        }
+        catch (e) { }
+    }
+    function AddHandSign() {
+        document.getElementById("PageOfficeCtrl1").ZoomSeal.AddHandSign("{$name}");
+    }
+    function VerifySeal() {
+        document.getElementById("PageOfficeCtrl1").ZoomSeal.VerifySeal();
+    }
+    function ChangePsw() {
+        document.getElementById("PageOfficeCtrl1").ZoomSeal.ShowSettingsBox();
+    }
+</script>
+<if condition="$type eq 10">
+    <include file="Progress:title_protocol"/>
+    <elseif condition="$step eq 2 or $step eq 3 or $step eq 4"/>
+    <include file="Progress:title_check" xmlns="http://www.w3.org/1999/html"/>
+    <elseif condition="$type eq 40"/>
+    <include file="Progress:finish_title" xmlns="http://www.w3.org/1999/html"/>
+</if>
+<div id="div_page"  style="width: 1000px;margin-right: auto;margin-left: auto;" >
+    <?php echo $PageOfficeCtrl->getDocumentView("PageOfficeCtrl1") ?>
+</div>
+</body>
+</html>

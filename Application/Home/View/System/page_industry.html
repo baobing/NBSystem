@@ -1,0 +1,109 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+
+<div style="height: 80%;;width: 80%;position: fixed;">
+    <table id="dg" title="行业类别设置"
+           style="width:100%;min-height: 100%;;float: left;"
+           toolbar="#toolbar" pagination="true"
+           rownumbers="true" fitColumns="true"
+           singleSelect="true" pageSize="{$pageSize}" pageList="{$pageList}">
+        <thead>
+        <tr >
+                <th field="content" width="50">行业类别</th>
+                <th field="word" width="50">行业类别简称</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<div id="toolbar">
+    <a  class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="editUnit()">修改信息</a>
+</div>
+
+<div id="new_dlg" class="easyui-dialog " style="width:400px;height:200px;padding:10px 20px"
+     closed="true" buttons="#dlg-buttons3">
+    <div class="ftitle">基本信息</div>
+    <form id="new_fm" method="post" novalidate>
+
+        <div class="fitem">
+            <label>行业类别:</label>
+            <input name="content" class=" textbox" required="" autocomplete="off" >
+        </div>
+        <div class="fitem">
+            <label>行业类别简称:</label>
+            <input  name="word" class=" textbox" required="" autocomplete="off">
+        </div>
+
+
+    </form>
+</div>
+<div id="dlg-buttons3">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUnit()" style="width:90px">保存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#new_dlg').dialog('close')"
+       style="width:90px">取消</a>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#dg').datagrid({
+            url:'__URL__/listIndustry',
+            onDblClickRow: function(index,row){
+                editUnit();
+            }
+        });
+    });
+    var url;
+
+    function editUnit(){
+        var row = isSelected("#dg");
+        if(row==null) return ;
+        if (row){
+            $('#new_dlg').dialog('open').dialog('setTitle','修改信息');
+            $('#new_fm').form('load',row);
+            url = '__URL__/submitIndustry/id/'+row.id;
+        }
+    }
+    function saveUnit(){
+        if($('#new_fm').form('validate')){
+            var data = $('#new_fm').serializeArray();
+            $.post(url,data,function(){
+                $('#new_dlg').dialog('close');        // close the dialog
+                $('#dg').datagrid('reload');
+
+            });
+        }
+     /*   $('#new_fm').form('submit',{
+            url: url,
+            onSubmit: function(){
+                return $(this).form('validate');
+            },
+            success: function(result){
+                $('#new_dlg').dialog('close');        // close the dialog
+                $('#dg').datagrid('reload');
+
+            }
+        });*/
+    }
+</script>
+<style type="text/css">
+    #fm{
+        margin:0;
+        padding:10px 30px;
+    }
+    .ftitle{
+        font-size:14px;
+        font-weight:bold;
+        padding:5px 0;
+        margin-bottom:10px;
+        border-bottom:1px solid #ccc;
+    }
+    .fitem{
+        margin-bottom:5px;
+    }
+    .fitem label{
+        display:inline-block;
+        width:80px;
+    }
+    .fitem input{
+        width:250px;
+    }
+</style>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

@@ -1,0 +1,107 @@
+@charset "utf-8";
+/* CSS Document */
+.top{ height:26px; line-height:26px; width:1110px; margin:0 auto;}
+.top span{ float:right;}
+#header{width:1110px; margin:0 auto; }
+
+#center{ width:1110px; margin:0 auto; padding-bottom:64px;  position:relative;}
+
+#footer{width:100%; margin:0 auto; background:url(http://www.51qne.com/themes/default/images/f_bg.jpg) repeat-x; height:338px;}
+.f_box{ width:1110px; margin:0 auto;}
+.f_nav{ background:url(http://www.51qne.com/themes/default/images/line.jpg) no-repeat left bottom; height:184px;}
+.f_nav dl{ float:left; display:inline; width:222px; height:182px;}
+.f_nav dl dt{ height:42px; line-height:42px; color:#fff; text-align:center; padding-bottom:6px;}
+.f_nav dl dd{ height:24px; line-height:24px; text-align:center;}
+.f_nav dl dt a , .f_nav dl dt a:hover , .f_nav dl dd a{ color:#fff;}
+.f_nav dl dd a:hover{ color:#e20750}
+.fnav_s{ height:36px; line-height:36px; text-align:center;}
+.fnav_s a{ padding:0 35px; color:#fff;}
+.conpy{ text-align:center; color:#cfcfcf; line-height:58px; font-family:Arial, Helvetica, sans-serif;}
+
+
+
+/*分页*/
+.page_now{color:#e20750;}
+div.pager{text-align:center;line-height:32px; border-top:1px solid #a6a6a6; padding-top:24px}
+div.pager span{}
+div.pager a{border:1px solid #c2c2c2; line-height:32px; display:inline-block; padding:0 10px; background:#f5f5f5;}
+div.pager .page_now{border:1px solid #c2c2c2; line-height:32px; display:inline-block; padding:0 10px; color:#e20750; background:#FFFFFF;}
+/*div.pager a:hover{border:1px solid #c2c2c2; line-height:32px; display:inline-block; padding:0 10px; background:#e60012; color:#fff;}*/
+div.pager .pager_zj{ border:1px solid #c2c2c2; height:30px; line-height:30px; width:40px; text-align:center; background:#f5f5f5}
+div.pager .pager_but{ border:1px solid #e60012; background:#e30751; height:30px; width:52px; text-align:center; color:#fff; cursor:pointer;}
+
+
+/*新闻*/
+ul.news
+{
+	clear:both;
+	margin:10px 0px 0px 0px;
+	padding:0px;
+}
+ul.news li
+{ height:30px; padding:0 10px; margin-left:5px; margin-right:5px; border-bottom:dashed 1px #ccc; line-height:30px; 
+}
+
+ul.news1
+{
+	clear:both;
+	margin:0px;
+	padding:0px;
+}
+ul.news1 li
+{ background:url(http://www.51qne.com/themes/default/images/index_38.jpg) no-repeat left center; height:28px; width:190px; padding-left:20px; padding-top:2px; width:522px;
+}
+ul.news1 li a
+{
+	text-decoration:none;
+}
+
+.newstitle{text-align:center; font-size:14px; font-weight:bold; color:#333333;}
+.newssubtitle{ text-align:center}
+.newssubtitle span{margin-left:20px;}
+
+
+
+/*产品分类*/
+
+.producttype1 { height:27px; margin-bottom:3px;}
+.producttype1 a{ line-height:26px; color:#cccccc; background:url(http://www.51qne.com/themes/default/images/a_bg.jpg) no-repeat; display:block; padding-left:36px;}
+.producttype1 a:hover { line-height:26px; color:#fff; background:url(http://www.51qne.com/themes/default/images/hover_bg.jpg) no-repeat; display:block; padding-left:36px;}
+
+
+.producttype1 { height:27px; margin-bottom:3px;}
+.producttype1 a{ line-height:26px; color:#cccccc; background:url(http://www.51qne.com/themes/default/images/a_bg.jpg) no-repeat; display:block; padding-left:36px;}
+.producttype1 a:hover { line-height:26px; color:#fff; background:url(http://www.51qne.com/themes/default/images/hover_bg.jpg) no-repeat; display:block; padding-left:36px;}
+#list .current1 a , #list .current1 a:hover{ height:27px; margin-bottom:3px; line-height:26px; color:#fff; background:url(http://www.51qne.com/themes/default/images/hover_bg.jpg) no-repeat; display:block; padding-left:36px;}
+.producttype1current a , .producttype1current a:hover{ height:27px; margin-bottom:3px; line-height:26px; color:#fff; background:url(http://www.51qne.com/themes/default/images/hover_bg.jpg) no-repeat; display:block; padding-left:36px;}
+
+
+
+.producttype2 { height:26px; margin-bottom:3px;}
+.producttype2 a{ background:url(http://www.51qne.com/themes/default/images/a1.jpg) no-repeat; line-height:26px; color:#cccccc; display:block; padding-left:49px;}
+.producttype2 a:hover { background:url(http://www.51qne.com/themes/default/images/hover1.jpg) no-repeat; line-height:26px; color:#fff; display:block; padding-left:49px;}
+.producttype2current a , .producttype2current a:hover{height:26px; margin-bottom:3px;  background:url(http://www.51qne.com/themes/default/images/hover1.jpg) no-repeat; line-height:26px; color:#fff; display:block; padding-left:49px;}
+
+/*下载*/
+ul.downloads
+{
+	clear:both;
+	margin:0px;
+	padding:0px;
+	padding-top:5px;
+}
+
+ul.downloads li
+{
+ border-bottom:1px dashed #92d8ff; line-height:24px; background:url(http://www.51qne.com/themes/default/images/icon.jpg) no-repeat 5px center; text-indent:20px; height:24px; color:#d4f0ff;
+}
+
+ul.downloads li a
+{
+	text-decoration:none;
+}
+
+.tj_btn{ width:71px; height:25px; background:url(http://www.51qne.com/themes/default/images/btn_bg.jpg) no-repeat left top; vertical-align:middle; border:none; color:#FF0000; font-size:12px;}
+.multi_page{ text-align:center;}
+.multi_page span{ padding:0px 5px; font-size:12px;}
+.multi_page span a{ font-size:12px;}

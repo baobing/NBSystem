@@ -1,0 +1,39 @@
+<table id="dg" title="样品列表"
+       style="width:100%;min-height: 80%;;float: left;"
+       toolbar="#toolbar"
+       pagination="true"
+       rownumbers="true"
+
+       singleSelect="true"
+       pageSize="{$pageSize}" pageList="{$pageList}"
+       resizable="true"
+        >
+    <thead>
+    <tr >
+        <th width="100px" field="date" >协议日期</th>
+        <th width="100px" field="protocol_num"  >协议编号</th>
+        <th width="100px" field="sample_num" >样品编号</th>
+        <th width="100px" field="sample_name" >样品名称</th>
+        <th width="150px" field="client_name"   >委托单位</th>
+        <th width="200px" field="project_name"  >工程名称</th>
+        <th width="100px" field="send_person"  >送样人</th>
+        <th width="100px" field="tel">联系电话</th>
+        <th width="100px" field="price">试验费用</th>
+        <if condition="$type eq 5" > <!--收发记录 需要显示检测项目的具体信息-->
+            <th width="150px" field="test_detail" >检测项目</th>
+            <else/>  <th width="150px" field="test_item" >检测项目</th>
+        </if>
+        <th width="100px" field="step" formatter="fmStep">报告实时状态</th>
+        <th width="100px" field="is_pay" formatter="fm_ip">付费状态</th>
+        <th width="100px" field="receive_person" >收样人</th>
+        <th width="100px" field="take_type">报告提取方式</th>
+        <th width="100px" field="take_person">取报告人</th>
+        <th width="100px" field="mail_contact">收件人</th>
+        <th width="100px" field="mail_tel" >联系电话</th>
+        <th width="100px" field="mail_number" >邮编</th>
+        <th width="100px" field="mail_address" >邮寄地址</th>
+        <th width="100px" field="send_num" >快递编号</th>
+        <th width="100px" field="back_type">退样方式</th>
+    </tr>
+    </thead>
+</table>

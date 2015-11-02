@@ -1,0 +1,31 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    $(function() {
+        $("#dg").datagrid({
+            "url":"{:U('Query/getRechargeList','RC=1')}",
+            title:"收费记录",
+            rowStyler: function(index,row){
+            }
+        })
+    });
+    function btnSearchClick(){
+        var obj={};
+        $.each( $('#search_fm' ).serializeArray() ,function(index ,param){
+            if (!(param.name in obj)){
+                obj[param.name ]=param.value;
+            }
+        });
+        if((obj['rc_from']!="")^(obj['rc_to']!="")){
+            $.messager.alert("操作提示","日期区间不能存在一方为空！");
+            return ;
+        }
+        if(obj['rc_from']>obj['rc_to']!=""){
+            $.messager.alert("操作提示","日期区间存在问题！");
+            return ;
+        }
+        $('#dg').datagrid("load",obj);
+    }
+</script>
+<include file="table_recharge" xmlns="http://www.w3.org/1999/html"/>
+<include file="toolbar_recharge" xmlns="http://www.w3.org/1999/html"/>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

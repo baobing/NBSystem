@@ -1,0 +1,43 @@
+
+<table style="width: 1000px;margin-top: 5px;">
+    <tr >
+
+        <td>委托单位：</td>
+        <td><input name="client_name" class="textbox"></td>
+        <td>工程名称：</td>
+        <td><input name="project_name" class="textbox"></td>
+        <td>送样人：</td>
+        <td><input name="send_person" class="textbox"></td>
+        <td>检验类别：</td>
+        <td>
+            <select name="check_type" class="my-select">
+                <option value=""></option>
+
+                <option value="委托">委托</option>
+                <option value="抽检">抽检</option>
+                <option value="比对">比对</option>
+            </select>
+        </td>
+
+    </tr>
+    <tr >
+        <td>协议日期：</td>
+        <td><input name="date_from" class="easyui-datebox"></td>
+        <td>到：</td>
+        <td><input name="date_to" class="easyui-datebox"></td>
+        <td>样品名称：</td>
+        <td><input name="sample_name" class="textbox"></td>
+        <td>报告实时状态：</td>
+        <td>
+            <select name="report_step" class="my-select">
+                <option value=""></option>
+
+                <option value="-1">未完成</option>
+                <option value="5">已完成</option>
+                <option value="6">已取走</option>
+                <option value="7">已邮寄</option>
+            </select>
+        </td>
+
+    </tr>
+</table>

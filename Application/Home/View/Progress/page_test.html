@@ -1,0 +1,146 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    $(function() {
+        var data={};
+
+        if('{$type}'=='0'){
+             data.url="__APP__/Home/Query/getListSample/step/2/check_cnt/0/permission/3";
+            data["singleSelect"]=0;
+            data.onDblClickRow=function(){showTest("__APP__/Home/Progress/showTest");};
+        }else if('{$type}'=='1'){  //待修改
+            data.url="__APP__/Home/Query/getListSample/step/2/egt_check_cnt/1/permission/3";
+            data.onClickCell=function(rowIndex, field, value){
+                if(value==0) return ;
+                if(field=='check_cnt'){
+                    var rows=$('#s_dg').datagrid('getRows');
+                    var row=rows[rowIndex];
+                    $.messager.alert("驳回理由",row['refuse_note']);
+                }
+            }
+            data.onDblClickRow=function(){showTest("__APP__/Home/Progress/showTest");};
+            data["singleSelect"]=0;
+        }else {
+            data.url="__APP__/Home/Query/getListSample/tested/1/permission/3";
+           // data.onDblClickRow=function(){edit28Report();};
+        }
+        data["rowStyler"]=function(index,row){
+            if (row.priority == 1){
+                return 'color:red;'; // return inline style
+            }
+        }
+        $('#s_dg').datagrid(data);
+    });
+
+
+    function finishTest(){
+        var rows=$("#s_dg").datagrid("getChecked");
+        if(rows==null) {
+            $.messager.alert("操作提示","请先选择一行！！");
+            return ;
+        }
+        var ids=[];
+        for(var i=0;i<rows.length;i++){
+            ids.push(rows[i]["id"]);
+        }
+        $.post("{:U(checkFile)}",{ids:ids},function(res) {
+            if (res == "-1") {
+                $.messager.alert("操作提示", "请先编写检验报告！！");
+            }
+            else{
+                $.messager.confirm("请选择审核人员",'' +
+                        '<label for="check_person" style="margin-left: 10px;">请选择审核人员:</label>' +
+                        '<select id="check_person" name="check_person"  class="my-select"  multiple="multiple" style="margin-left: 10px;margin-top: 10px;min-height: 180px;">' +
+                        '<volist name="checker" id="vo" key="k">' +
+                        '<option value="{$vo.id}" <if condition="$k eq 1"> selected</if>>{$vo.name}</option>' +
+                        '</volist>' +
+                        '</select>',
+                        function(data){
+                            if(data){
+                                var  checker=$("#check_person").val();
+                                $.post("{:U(refreshStep)}",{ids:ids,step:3,check_person:checker[0]},function(data){
+                                    if(data) {
+                                        $("#s_dg").datagrid('reload');
+                                        showSuccess();
+                                    } else {
+                                        showFail();
+                                    }
+                                });
+                            }
+                        });
+            }
+        });
+
+    }
+    function finalTest(){
+        var rows=$("#s_dg").datagrid("getChecked");
+        if(rows==null) {
+            $.messager.alert("操作提示","请先选择一行！！");
+            return ;
+        }
+        var ids=[];
+        for(var i=0;i<rows.length;i++){
+            ids.push(rows[i]["id"]);
+        }
+        $.post("{:U(checkFile)}",{ids:ids},function(res) {
+            if (res == "-1") {
+                $.messager.alert("操作提示", "请先编写检验报告！！");
+            }
+            else{
+                $.messager.confirm("操作提示",'确认将报告提交到最终报告？',
+                        function(data){
+                            if(data){
+                                var  checker=$("#check_person").val();
+                                $.post("{:U(refreshStep)}",{ids:ids,step:5,final:1},function(data){
+                                    if(data) {
+                                        $("#s_dg").datagrid('reload');
+                                        showSuccess();
+                                    } else {
+                                        showFail();
+                                    }
+                                });
+                            }
+                        });
+            }
+            });
+    }
+    function edit28Report(){
+
+        var row=$("#s_dg").datagrid("getSelected");
+        if(row==null) {
+            $.messager.alert("操作提示","请先选择一行！！");
+            return ;
+        }
+        var sample_num = row.sample_num;
+
+        if(sample_num.charAt(sample_num.length-1) == "a"){
+            $.messager.alert("操作提示","不可以编写28天报告！！");
+            return ;
+        }
+
+        var iWidth=1200; //弹出窗口的宽度;
+        var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+        var iHeight=window.screen.availHeight-100; //弹出窗口的高度;
+        window.open("__URL__/edit28Report/id/"+row.id, "sample"+row.sample_num,
+                "height="+iHeight+",width=1200, top=0, left=20");
+
+    }
+    /**
+     * 退回报告
+     */
+    function btnClickBack(){
+        var rows=$("#s_dg").datagrid("getChecked");
+        if(rows.length==0){
+            $.messager.alert("操作提示","请先选择一行！");return ;
+        }
+        var url = "__URL__/testBackLeader"
+        var post_data = [];
+        for(var i in rows){
+            var tmp = {id:rows[i].id,sample_num:rows[i].sample_num};
+            post_data.push(tmp);
+        }
+        confirmPost("#s_dg","确认退回么？",url,{data:post_data});
+    }
+</script>
+<include file="Progress:table_sample" xmlns="http://www.w3.org/1999/html"/>
+<include file="Progress:toolbar"/>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

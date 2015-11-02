@@ -1,0 +1,49 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+    <script>
+        $(function(){
+            $("[name='is_sms']").val("{$is_sms}");
+            $("#saveBtn").click(function(){
+                var data = serializeObject("#fm");
+                debugger;
+                $.post("__URL__/setSms",data,function(data){
+                    if(data){
+                        showSuccess();
+                        location.reload();
+                    }else{
+                        showFail();
+                    }
+
+                })
+            });
+        });
+    </script>
+    <div style="width: 100%;height:180px;"title="短信设置" class="easyui-panel">
+        <form id ="fm"action="__URL__/setSms" method="post">
+            <table style="width: 500px;margin-top: 10px;margin-left: 10px;">
+                <tr >
+                    <td style="width: 140px;">启用优先任务短信提醒:</td>
+                    <td style="width: 360px;">
+                        <select name="is_sms" class="my-select" style="width: 100%">
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td >短信发送内容:</td>
+                    <td >
+                        <textarea  style="width: 98%;height: 50px;border-radius: 3px;border: solid 1px #AAAAAA"
+                         name="sms_content" placeholder="请输入发送短信内容，如：【样品编号】报告需要优先处理！【易餐·千红】。注意：中括号内容不可修改！">{$sms_content}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td ></td>
+                    <td >
+                       <a id="saveBtn"style="float: right;width: 80px;" class="easyui-linkbutton c1" >保存</a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

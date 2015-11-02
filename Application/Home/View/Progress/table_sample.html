@@ -1,0 +1,38 @@
+<div style="height: 85%;;width: 96%;position: fixed;">
+    <table id="s_dg" style="width:100%;min-height: 90%;"
+           rownumbers="true"  singleSelect="true"pagination="true"
+           title="样品列表"toolbar="#toolbar"
+           pageSize="{$pageSize}" pageList="{$pageList}">
+        <thead>
+        <if condition="$type eq 0 or ($step eq 2 and $type eq 1)">
+            <th field="id" checkbox="true"></th>
+        </if>
+        <th field="protocol_num" width="100px;" sortable>协议编号</th>
+        <th field="sample_num" width="100px;" sortable>样品编号</th>
+        <th field="deadline" width="100px;">截止日期</th>
+        <if condition="$step egt 2 or $type egt 1">
+            <th field="check_cnt" width="100px;" formatter="checkCnt">修改次数</th>
+        </if>
+        <th field="sample_name"width="100px;" >样品名称</th>
+        <th field="test_item"  width="100px;" >检测项目</th>
+        <th field="test_basis" width="100px;" >检测依据</th>
+        <th field="stake_mark" width="100px;" >现场桩号/结构部位</th>
+        <th field="molding_date"width="100px;" >取样/成型日期</th>
+        <th field="sample_loca"width="100px;" >取样地点</th>
+        <th field="sample_cnt"width="100px;"  >样品数量</th>
+        <th field="sample_desc"width="100px;" >样品描述</th>
+        <th field="sample_format"width="100px;">规格/牌号</th>
+        <th field="producing_area"width="100px;">厂家产地</th>
+        <th field="delegate_cnt" width="100px;"  editor="{type:'text'}">代表数量</th>
+        <th field="make_num" width="100px;"  editor="{type:'text'}">生产批号</th>
+        <th field="note"   width="100px;"  editor="{type:'text'}">附加说明</th>
+        <th field="back_type" editor="{type:'text'}">退样方式</th>
+        <if condition="$step neq 1 or $type neq 0">
+            <th field="tester_name" width="100px;">试验人</th>
+        </if>
+        </thead>
+    </table>
+</div>
+<script>
+
+</script>

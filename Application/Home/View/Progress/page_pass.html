@@ -1,0 +1,62 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    var data={};
+    $(function() {
+        if('{$type}'==0){
+            data.url="__APP__/Home/Query/getListSample/step/4/permission/5";
+            data.onDblClickRow=function(){
+                showCheck();
+            }
+            data["singleSelect"]=0;
+        }else{
+            data.url="__APP__/Home/Query/getListSample/passed/1/permission/5";
+        }
+        data["rowStyler"]=function(index,row){
+            if (row.priority == 1){
+                return 'color:red;'; // return inline style
+            }
+        }
+        $('#s_dg').datagrid(data);
+    });
+
+    function showCheck(){
+        var row=$("#s_dg").datagrid("getSelected");
+        if(row==null) {
+            $.messager.alert("操作提示","请先选择一行！！");
+            return ;
+        }
+        if(row){
+            var iWidth=1200; //弹出窗口的宽度;
+            var iLeft = (window.screen.availWidth-10-iWidth)/2; //获得窗口的水平位置;
+            var iHeight=window.screen.availHeight-100; //弹出窗口的高度;
+            var url="__APP__/Home/Progress/showCheck/id/"+row.id+"/type/{$type}/step/{$step}";
+            window.open(url, "check_sample"+row.sample_num,
+                    "height="+iHeight+",width=1200,left="+iLeft);
+        }
+    }
+    function finishTest(){
+        var row=$("#s_dg").datagrid("getSelected");
+        if(row==null) {
+            $.messager.alert("操作提示","请先选择一行！！");
+            return ;
+        }
+        var ids=firstMultiSelect();
+        var str="确认要通过报告么？";
+        $.messager.confirm("操作提示",str,function(data){
+            if(data){
+                $.post("{:U(refreshStep)}",{ids:ids,step:5},function(data){
+                    if(data) {
+                        $("#s_dg").datagrid('reload');
+                        showSuccess();
+                    } else {
+                        showFail();
+                    }
+                });
+            }
+        });
+    }
+
+</script>
+<include file="Progress:table_sample" xmlns="http://www.w3.org/1999/html"/>
+<include file="Progress:toolbar"/>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

@@ -1,0 +1,80 @@
+<include file="Public:header" xmlns="http://www.w3.org/1999/html"/>
+<script>
+    $(function() {
+        var data={};
+        if('{$type}'==0){
+            data["url"]="__APP__/Home/Query/getListSample/step/1/permission/2";
+            data["singleSelect"]=0;
+        }else{
+            data["url"]="__APP__/Home/Query/getListSample/assigned/1/permission/2";
+        }
+        data[""]
+        data["onDblClickRow"]= function(){
+            showTask('__APP__/Home/Progress/showTask');
+        }
+        data["rowStyler"]=function(index,row){
+            if (row.priority == 1){
+                return 'color:red;'; // return inline style
+            }
+        }
+        $('#s_dg').datagrid(data);
+    });
+
+    function btnClickAssign(){
+        var rows=$("#s_dg").datagrid("getChecked");
+        if(rows.length==0){
+            $.messager.alert("操作提示","请先选择");return ;
+        }
+        var str='<div  >请选择试验人员：</div>' +
+                '<select id="tester" multiple="multiple"  style="width: 90px;margin-top:10px;min-height: 250px;width: 200px;">' +
+                '<volist name="tester" id="vo" key="k">' +
+                '<option value="{$vo.id}" <if condition="$k eq 1">selected</if>>{$vo.name}' +
+                '</option>' +
+                '</volist>' +
+                '</select>';
+        var url="{:U(refreshStep)}";
+        var ids=[];
+        for(var i=0;i<rows.length;i++){
+            ids.push(rows[i]["id"]);
+        }
+        var post_data={ids:ids,step:2};
+        var var_data=new Array({key:'tester',value:'#tester',type:0});
+        confirmPost("#s_dg",str,url,post_data,null,var_data);
+    }
+    function btnClickTransfer(){
+        var rows=$("#s_dg").datagrid("getChecked");
+        if(rows.length==0){
+            $.messager.alert("操作提示","请先选择");return ;
+        }
+        var str='<div  >请选择部门主任：</div>' +
+                '<select id="assigner" multiple="multiple"  style="width: 90px;margin-top:10px;min-height: 250px;width: 200px;">' +
+                '<volist name="assigner" id="vo" key="k">' +
+                '<option value="{$vo.id}" <if condition="$k eq 1">selected</if>>{$vo.name}' +
+                '</option>' +
+                '</volist>' +
+                '</select>';
+        var url="{:U(Transfer)}";
+        var ids=[];
+        for(var i=0;i<rows.length;i++){
+            ids.push(rows[i]["id"]);
+        }
+        var post_data={ids:ids};
+        var var_data=new Array({key:'assign_person',value:'#assigner',type:0});
+        confirmPost("#s_dg",str,url,post_data,null,var_data);
+    }
+    //报告退回收发室
+    function btnClickBack(){
+        var rows=$("#s_dg").datagrid("getChecked");
+        if(rows.length==0){
+            $.messager.alert("操作提示","请先选择");return ;
+        }
+        var ids = [];
+        for(var i in rows){
+            ids.push(rows[i]["id"]);
+        }
+        confirmPost("#s_dg","确认退回收发室么？","__URL__/testBack",{ids:ids});
+    }
+</script>
+<include file="Progress:table_sample" xmlns="http://www.w3.org/1999/html"/>
+<include file="Progress:toolbar"/>
+<include file="Public:footer" xmlns="http://www.w3.org/1999/html"/>

@@ -1,0 +1,25 @@
+<div style="width:100%;height: 35px;background: #000000">
+    <div style="width: 1000px;margin-left: auto;margin-right: auto;padding-top: 5px;">
+        <div id="next" style="float: right" class="easyui-linkbutton" iconCls="icon-redo" >下一页</div>
+        <div id="pre" style="float: right;margin-right: 20px;" class="easyui-linkbutton" iconCls="icon-undo">上一页</div>
+        <div style="font-size: 15px;color: white;">一共{$total}页:当前第{$curr}页</div>
+    </div>
+</div>
+<script>
+    $(function(){
+        if('{$next}'=='-4'){
+            $('#next').linkbutton('disable');
+        }else{
+            $('#next').click(function(){
+                location.href="__APP__/Home/Progress/showProtocol/id/{$id}/curr/{$next}";
+            })
+        }
+        if('{$pre}'=='-4'){
+            $('#pre').linkbutton('disable');
+        }else{
+            $('#pre').click(function(){
+                location.href="__APP__/Home/Progress/showProtocol/id/{$id}/curr/{$pre}";
+            })
+        }
+    });
+</script>
