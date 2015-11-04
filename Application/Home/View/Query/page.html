@@ -99,6 +99,9 @@
         }else if(row.is_back == 1){
             $.messager.alert("操作提示",'该协议处于退回状态,请在"退回报告"中处理');
             return ;
+        }else if(row.is_finance == 1){
+            $.messager.alert("操作提示",'已经转交财务室');
+            return ;
         }
         var url =  "__URL__/toFinance";
         var postData = {id:row.id};
