@@ -98,6 +98,11 @@
                             $('#dg').datagrid('fixDetailRowHeight',index);
                         }
                     });
+                },
+                rowStyler:function(index,row){
+                    if (row.is_finance == 1){
+                        return 'color:green;'; // return inline style
+                    }
                 }
             });
         }else if("<?php echo ($type); ?>"=="1" || "<?php echo ($type); ?>"=="3"||"<?php echo ($type); ?>" == "5"||"<?php echo ($type); ?>" == "6"){ // 5收发等级表
@@ -149,7 +154,27 @@
         $("#setPriority").click(function(){
             setPriority();
         });
+        $("#finance_btn").click(function(){
+            toFinance();
+        });
     });
+    /**
+     * 由收发室转交给财务
+     * 退回协议不可走次流程
+     */
+    function toFinance(){
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+            return ;
+        }else if(row.is_back == 1){
+            $.messager.alert("操作提示",'该协议处于退回状态,请在"退回报告"中处理');
+            return ;
+        }
+        var url =  "/NBSystem/index.php/Home/Query/toFinance";
+        var postData = {id:row.id};
+        confirmPost("#dg","确认转交财务室么?",url,postData);
+    }
     function takeBtnClick(){             //取走报告点击事件
         var row=$('#dg').datagrid('getSelected');
         if(row==null){
@@ -292,6 +317,7 @@
         <a href="/NBSystem/index.php/Home/Query/getExcelSample" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a><?php endif; ?>
     <?php if($type == 0): ?><a id="protocol_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">协议书</a><?php endif; ?>
     <?php if($type == 0): ?><a id="del_btn" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a><?php endif; ?>
+    <?php if($type == 0): ?><a id="finance_btn" class="easyui-linkbutton" iconCls="icon-back" plain="true">转交财务</a><?php endif; ?>
     <?php if($type == 5): ?><a href="/NBSystem/index.php/Home/Query/getExcelSample/testDetail/1" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a>
         <a id="setPriority" class="easyui-linkbutton" iconCls="icon-edit" plain="true">优先试验</a><?php endif; ?>
 </div>
@@ -423,6 +449,7 @@
         >
     <thead>
     <tr >
+        <th field="id" checkbox="true"></th>
         <th width="100px" field="date" >协议日期</th>
         <th width="100px" field="protocol_num"  >协议编号</th>
         <th width="100px" field="sample_num" >样品编号</th>

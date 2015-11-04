@@ -5,20 +5,20 @@
 
 
     <title><?php echo ($company); ?></title>
-    <link rel="stylesheet" type="text/css" href="/Public/css/default.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/bootstrap/easyui.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/color.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/demo/demo.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/css/default.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/bootstrap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/demo/demo.css">
 
 
-    <script type="text/javascript" src="/Public/js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="/Public/js/jgxLoader.js"></script>
-    <script type="text/javascript" src="/Public/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/Public/easyui/locale/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="/Public/easyui/datagrid-detailview.js"></script>
-    <script type="text/javascript" src="/Public/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/Public/js/base.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jgxLoader.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/datagrid-detailview.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/base.js"></script>
 
 </head>
 <style>
@@ -71,37 +71,52 @@
 </style>
 <body style="margin: 0px;padding: 15px;" >
 <script>
-    var rowNum = -1;
+    var rowNums = [];
 
     $(function(){
-        $("#dg").datagrid({url:"/index.php/Home/Query/getSampleList/step/-1"});
+        $("#dg").datagrid({url:"/NBSystem/index.php/Home/Query/getSampleList/step/-1"});
         $("#modify_btn").click(function(){modifyBtnClick()});
         $("#save_btn").click(function(){saveBtnClick()});
     });
     function modifyBtnClick(){
-        var row = $("#dg").datagrid("getSelected");
-        if(!row){
-            $.messager.alert("操作提示","请先选择");
+        var rows = $("#dg").datagrid("getChecked");
+        if(!rows){
+            $.messager.alert("操作提示","请先选中一行或多行");
             return ;
         }
-        rowNum = $("#dg").datagrid("getRowIndex",row);
-        $("#dg").datagrid("beginEdit",rowNum);
+        for(var i =0;i < rows-1;i++){
+            if(rows[i]["protocol_num"] != rows[i + 1]["protocol_num"]){
+                $.messager.alert("操作提示","非同一协议,不可同时修改!");
+                return ;
+            }
+        }
+        for(var i =0;i < rows;i++){
+            if(1 == rows[i]["is_finance"] ){
+                $.messager.alert("操作提示","该协议处于财务审核阶段,不可修改!");
+                return ;
+            }
+        }
+        rowNums = [];
+        for(var i in rows){
+            var rowNum = $("#dg").datagrid("getRowIndex",rows[i]);
+            rowNums.push(rowNum);
+            $("#dg").datagrid("beginEdit",rowNum);
+        }
     }
     function saveBtnClick(){
-        var rowTemp = $("#dg").datagrid("getSelected");
-        var rowNumTemp = $("#dg").datagrid("getRowIndex",rowTemp);
-        if(rowNumTemp != rowNum){
-            $.messager.alert("操作提示","该行未被修改");
-            return ;
+        //ç
+        var allRow = $("#dg").datagrid("getRows");
+        var postRow = [];
+        for(var i in rowNums){
+            var rowIndex = rowNums[i];
+            $("#dg").datagrid("endEdit",rowIndex);
+            postRow[i] = allRow[rowIndex];
         }
-
-        $("#dg").datagrid("endEdit",rowNum);
-        var rows = $("#dg").datagrid("getRows");
-        var row = rows[rowNum];
+        debugger;
         var var_data=[{type:0,key:"back_reason",value:"#back_reason"}];
         confirmPost("#dg","确认保存么？<br/>改动原因：<br/>" +
-        "<textarea id='back_reason' style='width: 260px;height: 50px;'>"+row.back_reason+"</textarea>",
-                "/index.php/Home/WangOffice/saveTest",row,null,var_data);
+        "<textarea id='back_reason' style='width: 260px;height: 50px;'>"+postRow[0].back_reason+"</textarea>",
+                "/NBSystem/index.php/Home/WangOffice/saveTest",{rows:postRow},null,var_data);
     }
 </script>
 <div style="height: 100%;;width: 96%;position: fixed;">
@@ -110,6 +125,7 @@
            title="样品列表"pagination="true" toolbar="#toolbar"
            pageSize="<?php echo ($pageSize); ?>" pageList="<?php echo ($pageList); ?>">
         <thead>
+        <th field="id" checkbox="true"></th>
         <th width="100px" field ="protocol_num" >协议编号</th>
         <th width="100px" field ="sample_num" >样品编号</th>
         <th width="100px" field ="sample_name" editor="{type:'text'}">样品名称</th>

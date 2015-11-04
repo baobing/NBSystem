@@ -5,20 +5,20 @@
 
 
     <title><?php echo ($company); ?></title>
-    <link rel="stylesheet" type="text/css" href="/Public/css/default.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/bootstrap/easyui.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/color.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/demo/demo.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/css/default.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/bootstrap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/demo/demo.css">
 
 
-    <script type="text/javascript" src="/Public/js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="/Public/js/jgxLoader.js"></script>
-    <script type="text/javascript" src="/Public/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/Public/easyui/locale/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="/Public/easyui/datagrid-detailview.js"></script>
-    <script type="text/javascript" src="/Public/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/Public/js/base.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jgxLoader.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/datagrid-detailview.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/base.js"></script>
 
 </head>
 <style>
@@ -74,14 +74,14 @@
     $(function() {
         var data={};
         if('<?php echo ($type); ?>'==0){
-            data["url"]="/index.php/Home/Query/getListSample/step/1/permission/2";
+            data["url"]="/NBSystem/index.php/Home/Query/getListSample/step/1/permission/2";
             data["singleSelect"]=0;
         }else{
-            data["url"]="/index.php/Home/Query/getListSample/assigned/1/permission/2";
+            data["url"]="/NBSystem/index.php/Home/Query/getListSample/assigned/1/permission/2";
         }
         data[""]
         data["onDblClickRow"]= function(){
-            showTask('/index.php/Home/Progress/showTask');
+            showTask('/NBSystem/index.php/Home/Progress/showTask');
         }
         data["rowStyler"]=function(index,row){
             if (row.priority == 1){
@@ -143,7 +143,7 @@
         for(var i in rows){
             ids.push(rows[i]["id"]);
         }
-        confirmPost("#s_dg","确认退回收发室么？","/index.php/Home/Progress/testBack",{ids:ids});
+        confirmPost("#s_dg","确认退回收发室么？","/NBSystem/index.php/Home/Progress/testBack",{ids:ids});
     }
 </script>
 <div style="height: 85%;;width: 96%;position: fixed;">
@@ -184,11 +184,11 @@
         <?php if($step == 1): if($type == 0): ?><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="btnClickAssign()">分配任务</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="btnClickTransfer()">转交任务</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-back" plain="true" onclick="btnClickBack()">退回收发室</a><?php endif; ?>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" plain="true" onclick="showTask('/index.php/Home/Progress/showTask')">任务书</a><?php endif; ?>
-        <?php if($step == 2): if($type != 2): ?><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="showTest('/index.php/Home/Progress/showTest')">编写检测报告</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" plain="true" onclick="showTask('/NBSystem/index.php/Home/Progress/showTask')">任务书</a><?php endif; ?>
+        <?php if($step == 2): if($type != 2): ?><a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="showTest('/NBSystem/index.php/Home/Progress/showTest')">编写检测报告</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="finishTest()">完成试验</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="finalTest()">最终报告</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" plain="true" onclick="showTask('/index.php/Home/Progress/showTask')">任务书</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-print" plain="true" onclick="showTask('/NBSystem/index.php/Home/Progress/showTask')">任务书</a>
                 <?php elseif($type == 2): ?>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit28Report()">编写28天报告</a><?php endif; ?>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-back" plain="true" onclick="btnClickBack()">退回报告</a><?php endif; ?>

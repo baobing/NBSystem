@@ -5,20 +5,20 @@
 
 
     <title><?php echo ($company); ?></title>
-    <link rel="stylesheet" type="text/css" href="/Public/css/default.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/icon.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/bootstrap/easyui.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/themes/color.css">
-    <link rel="stylesheet" type="text/css" href="/Public/easyui/demo/demo.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/css/default.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/bootstrap/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="/NBSystem/Public/easyui/demo/demo.css">
 
 
-    <script type="text/javascript" src="/Public/js/jquery-1.8.0.min.js"></script>
-    <script type="text/javascript" src="/Public/js/jgxLoader.js"></script>
-    <script type="text/javascript" src="/Public/easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="/Public/easyui/locale/easyui-lang-zh_CN.js"></script>
-    <script type="text/javascript" src="/Public/easyui/datagrid-detailview.js"></script>
-    <script type="text/javascript" src="/Public/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/Public/js/base.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jgxLoader.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/easyui/datagrid-detailview.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/NBSystem/Public/js/base.js"></script>
 
 </head>
 <style>
@@ -78,45 +78,41 @@
     $(function(){
         var data={};
         if("<?php echo ($type); ?>"=="0"){
-            data['url']="/index.php/Home/Query/getProtocolList/is_pay/0/check_pay/0";
+            data['url']="/NBSystem/index.php/Home/Query/getProtocolList/is_pay/0/check_pay/0/is_finance/1";
             data['title']="待处理协议";
             data['onDblClickRow']=function(rowIndex, rowData){
                 bntClickProgress();
             }
         }else  if("<?php echo ($type); ?>"=="1"){
-            data['url']="/index.php/Home/Query/getProtocolList/checking/1";
+            data['url']="/NBSystem/index.php/Home/Query/getProtocolList/checking/1/is_finance/1";
             data['title']="审批中协议列表";
         }else  if("<?php echo ($type); ?>"=="2"){
-            data['url']="/index.php/Home/Query/getProtocolList/checked/1";
+            data['url']="/NBSystem/index.php/Home/Query/getProtocolList/checked/1/is_finance/1";
             data['title']="已审批协议列表";
             data['onDblClickRow']=function(){
                 checkConfirm();
             }
         }else if("<?php echo ($type); ?>"=="3"){
-            data["url"]="/index.php/Home/Query/getProtocolList/is_pay/1/payed/0/check_pay/0";
+            data["url"]="/NBSystem/index.php/Home/Query/getProtocolList/is_pay/1/payed/0/check_pay/0/is_finance/1";
             data['title']="取报告付款协议列表";
             data['onDblClickRow']=function(rowIndex, rowData){
                 nowPay(rowData);
             }
         }else if("<?php echo ($type); ?>"=="4"){
-            data["url"]="/index.php/Home/Query/getProtocolList/is_pay/3/payed/0";
+            data["url"]="/NBSystem/index.php/Home/Query/getProtocolList/is_pay/3/payed/0/is_finance/1";
             data['title']="协议结算列表";
             data["singleSelect"]=0;
-        /*    data['onDblClickRow']=function(rowIndex, rowData){
-                bntClickSettle();
-
-            }*/
 
         }
         else if("<?php echo ($type); ?>"=="5"){
-            data["url"]="/index.php/Home/Query/getProtocolList/payed/1";
+            data["url"]="/NBSystem/index.php/Home/Query/getProtocolList/payed/1/is_finance/1";
             data['title']="已付费协议列表";
             data['onDblClickRow']=function(rowIndex, rowData){
                 bntModifyPrice();
             }
 
         }else if("<?php echo ($type); ?>"=="6"){
-            data["url"]="/index.php/Home/Query/getProtocolList/is_pay/4/payed/0/check_pay/0";
+            data["url"]="/NBSystem/index.php/Home/Query/getProtocolList/is_pay/4/payed/0/check_pay/0/is_finance/1";
             data['title']="挂账协议列表";
             data['onDblClickRow']=function(rowIndex, rowData){
                 nowPay(rowData);
@@ -127,7 +123,7 @@
             if(field=='price'){
                 var rows=$('#dg').datagrid('getRows');
                 var row=rows[rowIndex];
-                $.post("/index.php/Home/Cost/detailPrice",{protocol_num:row.protocol_num},function(res){
+                $.post("/NBSystem/index.php/Home/Cost/detailPrice",{protocol_num:row.protocol_num},function(res){
                     var str='';
                     for(var i in res){
                         str+=res[i]["test_item"];
@@ -164,10 +160,10 @@
         var row=isSelected("#dg");
         if(!row) return;
         var post_data={id:row.id};
-        var url="/index.php/Home/Cost/checkConfirm";
+        var url="/NBSystem/index.php/Home/Cost/checkConfirm";
         var confirmStr = "确认审批结果？";
         if((row.is_pay==1||row.is_pay==4)&&(row.check_pay==12||row.check_pay==22)){  //第二次打折结算使用
-            url="/index.php/Home/Cost/second";
+            url="/NBSystem/index.php/Home/Cost/second";
             post_data["check_pay"]=row.check_pay;
         }
         else if(row.check_pay<20){
@@ -228,7 +224,7 @@
                     nowPay(row);
                 }else if(res==1){
                     var content='<lable>发票号</lable><input id="invoice_num4" style="width: 150px;margin-left: 20px;" value="'+row.invoice_num+'">';
-                    var url="/index.php/Home/Cost/stepTake";
+                    var url="/NBSystem/index.php/Home/Cost/stepTake";
                     var post_data={check_pay:1,id:row.id,leader:$("#checker1").val(),is_pay:1};
                     var var_data=[{key:"invoice_num",value:"#invoice_num4",type:0}];
                     confirmPost("#dg",content,url,post_data,null,var_data);
@@ -238,13 +234,13 @@
                         return ;
                     }
                     var content='<lable>发票号</lable><input id="invoice_num4" style="width: 150px;margin-left: 20px;" value="'+row.invoice_num+'">';
-                    var url="/index.php/Home/Cost/submitSettle";
+                    var url="/NBSystem/index.php/Home/Cost/submitSettle";
                     var post_data={is_pay:3,id:row.id,step:1};
                     var var_data=[{key:"invoice_num",value:"#invoice_num4",type:0}];
                     confirmPost("#dg",content,url,post_data,null,var_data);
                 }else if(res==4){
                     var content='<lable>发票号</lable><input id="invoice_num4" style="width: 150px;margin-left: 20px;" value="'+row.invoice_num+'">';
-                    var url="/index.php/Home/Cost/stepTake";
+                    var url="/NBSystem/index.php/Home/Cost/stepTake";
                     var post_data={check_pay:3,id:row.id,leader:$("#checker1").val(),is_pay:4};
                     var var_data=[{key:"invoice_num",value:"#invoice_num4",type:0}];
                     confirmPost("#dg",content,url,post_data,null,var_data);
@@ -285,9 +281,9 @@
             terms_pay:$('#terms_pay').val(),is_reduce:$("[name='is_reduce']:checked").val(),discount_price:$("#discount_price").val(),
             invoice_num:$("#invoice_num").val(),payed_price:row.payed_price};
         if(row.is_back == 1){ //退回报告单独梳理
-            url="/index.php/Home/Cost/backTask";
+            url="/NBSystem/index.php/Home/Cost/backTask";
         } else if($("[name='is_reduce']:checked").val()==1){
-            url="/index.php/Home/Cost/reduce";
+            url="/NBSystem/index.php/Home/Cost/reduce";
             data["check_pay"]="2";
             data["leader"]=$("#checker").val();
         }else{
@@ -369,7 +365,7 @@
         }
         var data={ids:ids,prices:$("#prices").val(),invoice_num:$("#invoice_num").val(),
             terms_pay:$('#terms_pay').val(),plan_pay:plans,person_pay:$("#rc_person").val(),payed:1};
-        $.post("/index.php/Home/Cost/saveSettle",data,function(res){
+        $.post("/NBSystem/index.php/Home/Cost/saveSettle",data,function(res){
             if(res) {
                 $("#dg").datagrid("reload");
                 $("#dlg").dialog("close");
@@ -385,13 +381,13 @@
         str+="<input id='add'name='add' class='textbox' value='0' type='text'/>";
         var data={"id":row.id};
         var var_data=[{key:"add",value:"#add",type:0}];
-        confirmPost("#dg",str,"/index.php/Home/Cost/modifyPrice",data,null,var_data);
+        confirmPost("#dg",str,"/NBSystem/index.php/Home/Cost/modifyPrice",data,null,var_data);
     }*/
     function bntModifyInvoice(){
         var row=isSelected("#dg");
         if(row==null) return ;
         var content='<lable>发票号</lable><input id="invoice_num4" style="width: 150px;margin-left: 20px;" value="'+row.invoice_num+'">';
-        var url="/index.php/Home/Cost/modifyInvoice";
+        var url="/NBSystem/index.php/Home/Cost/modifyInvoice";
         var post_data={id:row.id};
         var var_data=[{key:"invoice_num",value:"#invoice_num4",type:0}];
         confirmPost("#dg",content,url,post_data,null,var_data);
@@ -595,7 +591,7 @@
     <?php if($type == 3 or $type == 6): ?><a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="nowPay()">费用结算</a><?php endif; ?>
     <?php if($type == 4): ?><a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="bntClickSettle()">费用结算</a><?php endif; ?>
     <?php if($type == 5): ?><!--       <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="bntModifyPrice()">费用修改</a>-->
-        <a href="/index.php/Home/Cost/getExcelCost/payed/1"  class="easyui-linkbutton" iconCls="icon-print" plain="true" >Excel导出</a><?php endif; ?>
+        <a href="/NBSystem/index.php/Home/Cost/getExcelCost/payed/1"  class="easyui-linkbutton" iconCls="icon-print" plain="true" >Excel导出</a><?php endif; ?>
     <a href="#" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="bntModifyInvoice()">发票号修改</a>
     
 <form id="search_fm" style="margin: 0px;padding: 0px;">
