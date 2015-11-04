@@ -34,9 +34,6 @@ class QueryModel extends BaseModel {
             $where=$this->getPostData($_SESSION["prt"],$where);
             $where=$this->getGetData($where);
             $list=$DB->where($where)->order($order)->field($field)->select();
-      /*      if($is_nums==1){
-                $list=$this->getSampleNums($list);
-            }*/
             return $list;
         }
         if(isset($_GET["payed"])){
@@ -202,6 +199,9 @@ class QueryModel extends BaseModel {
         return $where;
     }
     function getGetData($where){
+        if(isset($_GET["is_finance"])){
+            $where['is_finance']=$_GET['is_finance'];
+        }
         if(isset($_GET["permission"])&&$_GET["permission"]==7){
             if($_SESSION["user"]["is_admin"]==0)
                 $where["leader"]=$_SESSION["user"]["id"];

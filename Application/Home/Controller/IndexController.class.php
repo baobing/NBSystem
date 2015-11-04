@@ -45,6 +45,7 @@ class IndexController extends BaseController {
     public function  getCnt(){
         $where1["protocol_step"]=0;
         $where1["is_pay"]=0;                      //待处理
+        $where1["is_finance"] = 1;
         $data[1]=M('nb_protocol')->where($where1)->count();
 
         $where2["check_pay"]=array("gt",10);     //审批完成

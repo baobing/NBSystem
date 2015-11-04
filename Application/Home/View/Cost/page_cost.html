@@ -7,45 +7,41 @@
     $(function(){
         var data={};
         if("{$type}"=="0"){
-            data['url']="__APP__/Home/Query/getProtocolList/is_pay/0/check_pay/0";
+            data['url']="__APP__/Home/Query/getProtocolList/is_pay/0/check_pay/0/is_finance/1";
             data['title']="待处理协议";
             data['onDblClickRow']=function(rowIndex, rowData){
                 bntClickProgress();
             }
         }else  if("{$type}"=="1"){
-            data['url']="__APP__/Home/Query/getProtocolList/checking/1";
+            data['url']="__APP__/Home/Query/getProtocolList/checking/1/is_finance/1";
             data['title']="审批中协议列表";
         }else  if("{$type}"=="2"){
-            data['url']="__APP__/Home/Query/getProtocolList/checked/1";
+            data['url']="__APP__/Home/Query/getProtocolList/checked/1/is_finance/1";
             data['title']="已审批协议列表";
             data['onDblClickRow']=function(){
                 checkConfirm();
             }
         }else if("{$type}"=="3"){
-            data["url"]="__APP__/Home/Query/getProtocolList/is_pay/1/payed/0/check_pay/0";
+            data["url"]="__APP__/Home/Query/getProtocolList/is_pay/1/payed/0/check_pay/0/is_finance/1";
             data['title']="取报告付款协议列表";
             data['onDblClickRow']=function(rowIndex, rowData){
                 nowPay(rowData);
             }
         }else if("{$type}"=="4"){
-            data["url"]="__APP__/Home/Query/getProtocolList/is_pay/3/payed/0";
+            data["url"]="__APP__/Home/Query/getProtocolList/is_pay/3/payed/0/is_finance/1";
             data['title']="协议结算列表";
             data["singleSelect"]=0;
-        /*    data['onDblClickRow']=function(rowIndex, rowData){
-                bntClickSettle();
-
-            }*/
 
         }
         else if("{$type}"=="5"){
-            data["url"]="__APP__/Home/Query/getProtocolList/payed/1";
+            data["url"]="__APP__/Home/Query/getProtocolList/payed/1/is_finance/1";
             data['title']="已付费协议列表";
             data['onDblClickRow']=function(rowIndex, rowData){
                 bntModifyPrice();
             }
 
         }else if("{$type}"=="6"){
-            data["url"]="__APP__/Home/Query/getProtocolList/is_pay/4/payed/0/check_pay/0";
+            data["url"]="__APP__/Home/Query/getProtocolList/is_pay/4/payed/0/check_pay/0/is_finance/1";
             data['title']="挂账协议列表";
             data['onDblClickRow']=function(rowIndex, rowData){
                 nowPay(rowData);

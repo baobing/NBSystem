@@ -95,4 +95,15 @@ class QueryController extends BaseController {
         $this->ajaxReturn($flg);
     }
 
+    /**
+     * TODO 将协议书移交到财务室
+     * @param id  协议书的id
+     */
+    public function toFinance(){
+        $db = M("nb_protocol");
+        $dt["id"] = $_POST["id"];
+        $dt["is_finance"] = 1;
+        $flg = $db->save($dt);
+        $this->ajaxReturn($flg);
+    }
 }

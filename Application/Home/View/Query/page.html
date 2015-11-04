@@ -27,6 +27,11 @@
                             $('#dg').datagrid('fixDetailRowHeight',index);
                         }
                     });
+                },
+                rowStyler:function(index,row){
+                    if (row.is_finance == 1){
+                        return 'color:green;'; // return inline style
+                    }
                 }
             });
         }else if("{$type}"=="1" || "{$type}"=="3"||"{$type}" == "5"||"{$type}" == "6"){ // 5收发等级表
@@ -78,7 +83,22 @@
         $("#setPriority").click(function(){
             setPriority();
         });
+        $("#finance_btn").click(function(){
+            toFinance();
+        });
     });
+    /**
+     * 由收发室转交给财务
+     */
+    function toFinance(){
+        var row=$('#dg').datagrid('getSelected');
+        if(row==null){
+            $.messager.alert("操作提示",'请先选择一行');
+        }
+        var url =  "__URL__/toFinance";
+        var postData = {id:row.id};
+        confirmPost("#dg","确认转交财务室么?",url,postData);
+    }
     function takeBtnClick(){             //取走报告点击事件
         var row=$('#dg').datagrid('getSelected');
         if(row==null){

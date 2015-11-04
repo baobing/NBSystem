@@ -210,9 +210,11 @@ class ProgressController extends BaseController {
         $this->showTest($new_id);
     }
     /**
+     * F
      * testBack 质检报告退回给收发室
      * is_back = 1;
      * step = -1;
+     * 协议设置为退回 状态
      */
     public function testBack(){
         $ids = $_POST["ids"];
@@ -223,6 +225,13 @@ class ProgressController extends BaseController {
             $dt["is_back"] = 1;
             $db->save($dt);
         }
+        //改变协议状态
+        $dt = $db->where ("id = ".$id)->find();
+        $where_prt["protocol_num"] = $dt["protocol_num"];
+        $db_protocol = M("nb_protocol");
+        $dt_protocol["is_back"] = 1;
+        $dt_protocol["is_finance"] = "0";
+        $db_protocol->where($where_prt)->save($dt_protocol);
         $this->ajaxReturn(true);
     }
     /**
