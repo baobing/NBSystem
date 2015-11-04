@@ -3,9 +3,9 @@
     <if condition="$type eq 0 or $type eq 2">
         <a id="save_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
         <a href="__URL__/getExcelPrt" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a>
-        <elseif condition="$type eq 1 or $type eq 6"/>
+    </if>
+    <if condition="$type eq 1 or $type eq 6">
         <a id="sample_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">检测报告</a>
-
     </if>
     <if condition="$type eq 1">
         <a id="take_btn" class="easyui-linkbutton" iconCls="icon-redo" plain="true">取走报告</a>

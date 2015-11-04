@@ -89,11 +89,16 @@
     });
     /**
      * 由收发室转交给财务
+     * 退回协议不可走次流程
      */
     function toFinance(){
         var row=$('#dg').datagrid('getSelected');
         if(row==null){
             $.messager.alert("操作提示",'请先选择一行');
+            return ;
+        }else if(row.is_back == 1){
+            $.messager.alert("操作提示",'该协议处于退回状态,请在"退回报告"中处理');
+            return ;
         }
         var url =  "__URL__/toFinance";
         var postData = {id:row.id};
@@ -192,8 +197,10 @@
         if(row==null){
             $.messager.alert("操作提示",'请先选择一行');
             return;
+        }else if(row.is_finance == 1){
+            $.messager.alert("操作提示",'财务审核阶段不可修改');
+            return;
         }
-
         location.href='__APP__/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/2';
         if("{$type}"=="2"){
             location.href='__APP__/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/1';

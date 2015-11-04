@@ -230,7 +230,7 @@ class ProgressController extends BaseController {
         $where_prt["protocol_num"] = $dt["protocol_num"];
         $db_protocol = M("nb_protocol");
         $dt_protocol["is_back"] = 1;
-        $dt_protocol["is_finance"] = "0";
+        $dt_protocol["is_finance"] = 0;
         $db_protocol->where($where_prt)->save($dt_protocol);
         $this->ajaxReturn(true);
     }
