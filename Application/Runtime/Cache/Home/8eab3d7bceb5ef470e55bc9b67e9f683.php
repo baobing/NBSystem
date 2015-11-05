@@ -84,7 +84,7 @@
             $('#dg').datagrid({
                 url:"/NBSystem/index.php/Home/Query/getProtocolList/prt/1/nums/1",title:"协议书列表",
                 onDblClickRow:function(rowIndex, rowData){
-                    protocolBtnClick();
+                    toFinance();
                 },
                 view: detailview,
                 detailFormatter: function(rowIndex, rowData){
@@ -169,6 +169,9 @@
             return ;
         }else if(row.is_back == 1){
             $.messager.alert("操作提示",'该协议处于退回状态,请在"退回报告"中处理');
+            return ;
+        }else if(row.is_finance == 1){
+            $.messager.alert("操作提示",'已经转交财务室');
             return ;
         }
         var url =  "/NBSystem/index.php/Home/Query/toFinance";
@@ -268,8 +271,10 @@
         if(row==null){
             $.messager.alert("操作提示",'请先选择一行');
             return;
+        }else if(row.is_finance == 1){
+            $.messager.alert("操作提示",'财务审核阶段不可修改');
+            return;
         }
-
         location.href='/NBSystem/index.php/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/2';
         if("<?php echo ($type); ?>"=="2"){
             location.href='/NBSystem/index.php/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/1';
@@ -310,14 +315,13 @@
         <div style="width: 800px;margin-top: 5px;">
    <a id="query_btn" class="easyui-linkbutton" iconCls="icon-search" plain="true">查询</a>
     <?php if($type == 0 or $type == 2): ?><a id="save_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
-        <a href="/NBSystem/index.php/Home/Query/getExcelPrt" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a>
-        <?php elseif($type == 1 or $type == 6): ?>
-        <a id="sample_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">检测报告</a><?php endif; ?>
+        <a href="/NBSystem/index.php/Home/Query/getExcelPrt" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a><?php endif; ?>
+    <?php if($type == 1 or $type == 6): ?><a id="sample_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">检测报告</a><?php endif; ?>
     <?php if($type == 1): ?><a id="take_btn" class="easyui-linkbutton" iconCls="icon-redo" plain="true">取走报告</a>
         <a href="/NBSystem/index.php/Home/Query/getExcelSample" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a><?php endif; ?>
     <?php if($type == 0): ?><a id="protocol_btn" class="easyui-linkbutton" iconCls="icon-edit" plain="true">协议书</a><?php endif; ?>
     <?php if($type == 0): ?><a id="del_btn" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a><?php endif; ?>
-    <?php if($type == 0): ?><a id="finance_btn" class="easyui-linkbutton" iconCls="icon-back" plain="true">转交财务</a><?php endif; ?>
+    <?php if($type == 0): ?><a id="finance_btn" class="easyui-linkbutton" iconCls="icon-redo" plain="true">转交财务</a><?php endif; ?>
     <?php if($type == 5): ?><a href="/NBSystem/index.php/Home/Query/getExcelSample/testDetail/1" class="easyui-linkbutton" iconCls="icon-print" plain="true">导出</a>
         <a id="setPriority" class="easyui-linkbutton" iconCls="icon-edit" plain="true">优先试验</a><?php endif; ?>
 </div>
