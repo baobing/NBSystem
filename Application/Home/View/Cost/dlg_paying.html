@@ -28,7 +28,7 @@
             <input  name="project_name" class="textbox" readonly>
         </div>
 
-        <div class="fitem">
+        <div id="terms_pay_div" class="fitem" >
             <label>付费方式:</label>
             <select id="terms_pay" name="terms_pay"  class="textbox" style="width: 245px;" >
                 <option value="1">现金</option>
@@ -36,7 +36,7 @@
             </select>
         </div>
 
-        <div class="fitem">
+        <div class="fitem" id="rc_person_div">
             <label>缴费人:</label>
             <input id="rc_person" name="rc_person" class="textbox" maxlength="20">
         </div>
@@ -45,39 +45,29 @@
             <span>否</span><input  type="radio" name="is_reduce" onclick="removeReduce()" style="width: 30px;"value="0">
             <span>是</span><input  type="radio" name="is_reduce"  onclick="reducePrice()" style="width: 30px;" value="1">
         </div>
-<!--        <div class="fitem div-discount" id="div_discount" style="display: none">
-            <label>折扣数量（折）:</label>
-             <select id="discount" class="easyui-combobox" style="width: 255px;" panelHeight="auto">
-                 <option>10 </option>
-                 <option>9</option>
-                 <option>8.5</option>
-                 <option>8</option>
-                 <option>0</option>
-             </select>
-        </div>-->
 
-        <div class="fitem div-discount" style="display: none">
-            <label >打折审批:</label>
+        <div id="checker_div" class="fitem">
+            <label >审批人:</label>
             <select id='checker' class='textbox' style='width: 245px;'>
                   <volist name='checker' id='vo'>
                       <option value='{$vo.id}'>{$vo.name}</option>
                   </volist>
             </select>
         </div>
-        <div class="fitem">
+        <div class="fitem" id="price_div">
             <label>检测费用(元):</label>
             <input  name="price" id="price" class="textbox" readonly>
         </div>
-        <div class="fitem" >
+        <div class="fitem" id="payed_price_div" >
             <label>已付费用(元):</label>
             <input id="payed_price" name="payed_price" class="textbox"  readonly>
         </div>
-        <div class="fitem">
+        <div class="fitem" id="plan_pay_div">
             <label>缴纳费用(元):</label>
-             <input id="plan_pay" name="plan_pay" class="textbox" required="">
+             <input id="plan_pay" name="plan_pay" class="textbox" required="" readonly onchange="payChange()">
         </div>
 
-        <div class="fitem">
+        <div class="fitem" id="discount_price_div">
             <label>折扣费用(元):</label>
             <input id="discount_price" name="discount_price" class="textbox" required="" readonly>
         </div>

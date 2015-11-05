@@ -104,7 +104,6 @@
         }
     }
     function saveBtnClick(){
-        //ç
         var allRow = $("#dg").datagrid("getRows");
         var postRow = [];
         for(var i in rowNums){
@@ -112,7 +111,7 @@
             $("#dg").datagrid("endEdit",rowIndex);
             postRow[i] = allRow[rowIndex];
         }
-        debugger;
+        //debugger;
         var var_data=[{type:0,key:"back_reason",value:"#back_reason"}];
         confirmPost("#dg","确认保存么？<br/>改动原因：<br/>" +
         "<textarea id='back_reason' style='width: 260px;height: 50px;'>"+postRow[0].back_reason+"</textarea>",
@@ -121,7 +120,7 @@
 </script>
 <div style="height: 100%;;width: 96%;position: fixed;">
     <table id="dg" style="width:100%;min-height:90%;"
-           rownumbers="true"  singleSelect="true"
+           rownumbers="true"  singleSelect="false"
            title="样品列表"pagination="true" toolbar="#toolbar"
            pageSize="<?php echo ($pageSize); ?>" pageList="<?php echo ($pageList); ?>">
         <thead>

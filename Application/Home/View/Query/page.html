@@ -13,7 +13,7 @@
             $('#dg').datagrid({
                 url:"__URL__/getProtocolList/prt/1/nums/1",title:"协议书列表",
                 onDblClickRow:function(rowIndex, rowData){
-                    protocolBtnClick();
+                    toFinance();
                 },
                 view: detailview,
                 detailFormatter: function(rowIndex, rowData){

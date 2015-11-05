@@ -47,24 +47,6 @@ class CostModel extends BaseModel {
     }
 
 
-    public function modifyPrice(){   //完成付款协议费用修改
-        $db_prt=M("nb_protocol");
-        $dt_prt=$db_prt->where("id=".$_POST["id"])->find();
-        $dt_prt["plan_pay"]+=$_POST["add"];
-        $flg=$db_prt->save($dt_prt);
-        if(!$flg)  return false;
-        $db_rc=M("nb_recharge");
-        $dt_rc["protocol_id"]=$_POST["id"];
-        $dt_rc["user_id"]=$_SESSION["user"]["id"];
-        $dt_rc["time_pay"]=date("Y-m-d H:i:s",time());
-        $dt_rc["plan_pay"]=$_POST["add"];
-        $dt_rc["person_pay"]=$dt_prt["person_pay"];
-        $dt_rc["terms_pay"]=$dt_prt["terms_pay"];
-       /* $dt_rc["invoice_num"]=$dt_prt["invoice_num"];*/
-        $db_rc->add($dt_rc);
-        return $flg;
-    }
-
     /**
      * @return mixed
      * //取报告付款、挂账付款 直接付款
@@ -162,7 +144,6 @@ class CostModel extends BaseModel {
         $dt_rc["terms_pay"] = $dt_prt["terms_pay"];
         $dt_rc["invoice_num"] = $dt_prt["invoice_num"];
         $flg = $db_rc->add($dt_rc);
-
         return $flg;
     }
 
@@ -192,21 +173,51 @@ class CostModel extends BaseModel {
     }
 
     /**
+     * TODO 立即支付不打折 更新协议 付费日志 和 任务状态
      * @return bool
-     * //立即支付 更新财务信息 和 流程步骤
      */
     public function payNow(){
-        $flg=$this->refreshFiance($_POST["id"],$_POST["plan_pay"]);
+        $id = $_POST["id"];
+        $plan_pay = $_POST["plan_pay"];
+        //协议信息更新
+        $db_prt=M('nb_protocol');
+        $dt_prt=$db_prt->create();
+        $dt_prt["operator_pay"]=$_SESSION["user"]["id"];
+        $dt_prt["time_pay"]=date("Y-m-d H:i:s",time());
+        $dt_prt["payed_price"] = $plan_pay;
+        $dt_prt["plan_pay"] = 0;
+        $dt_prt["check_pay"] = 0;
+        $dt_prt["is_pay"] = 2;
+        $flg=$db_prt->save($dt_prt);
         if(!$flg) return false;
-        $flg=D("Progress")->stepAssign($_POST["id"]);
+        //付费日志更新
+        $dt_item = $db_prt->where('id='.$id)->find();
+        $dt_item["plan_pay"] = $plan_pay;
+        $flg = $this->addRC($dt_item);
+        if(!$flg) return false;
+        //任务书分配
+        $flg = D("Progress")->stepAssign($id);
         return  $flg;
     }
-
+    /**
+     * TODO 立即支付打折 更新协议信息
+     * @return bool
+     */
+    public function payDiscount(){
+        $db_prt=M('nb_protocol');
+        $dt_prt=$db_prt->create();
+        $dt_prt["operator_pay"]=$_SESSION["user"]["id"];
+        $dt_prt["time_pay"]=date("Y-m-d H:i:s",time());
+        $dt_prt["check_pay"] = 2;
+        $dt_prt["is_pay"] = 2;
+        $flg = $db_prt->save($dt_prt);
+        return $flg;
+    }
     /**
      * @param $id
      * @param $plan_pay  计划收取费用
      * @return mixed
-     * //更新协议付费信息 以及收发记录
+     * TODO 更新协议付费信息 以及收发记录
      */
     function refreshFiance($id,$plan_pay){
 
@@ -217,7 +228,7 @@ class CostModel extends BaseModel {
         $dt_prt["id"]=$id;
         $dt_prt["payed_price"] += $plan_pay;
         $dt_prt["plan_pay"] = 0;
-        $dt_prt["check_pay"]=0;
+        $dt_prt["check_pay"]= 0;
         $flg=$db_prt->save($dt_prt);
         if(!$flg) return false;
 

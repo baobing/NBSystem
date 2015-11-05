@@ -95,8 +95,14 @@ class CostController extends BaseController {
     public function submitSettle(){  //财务人员确定使用协议结算 并且进入step1
         $this->ajaxReturn(D("Cost")->submitSettle());
     }
-    public function payNow(){         //立即支付 更新财务信息 和 流程步骤
-        $this->ajaxReturn(D("Cost")->payNow());
+    public function nowPay(){         //立即支付 更新财务信息 和 流程步骤
+
+        if(0 == $_POST["is_reduce"]){
+            $flg = D("Cost")->payNow();
+        }else{
+            $flg = D("Cost")->payDiscount();
+        }
+        $this->ajaxReturn($flg);
     }
     public function detailPrice(){
         $where['protocol_num']=array("like",$_POST["protocol_num"]);
