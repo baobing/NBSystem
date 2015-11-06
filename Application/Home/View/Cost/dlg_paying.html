@@ -1,5 +1,5 @@
 
-<div id="dlg" class="easyui-dialog" title="付费信息" style="width:430px;height:600px;top:10px;"
+<div id="dlg" class="easyui-dialog" title="付费信息" style="width:430px;height:550px;top:10px;"
      toolbar="#toolbar"
      iconCls='icon-save'resizable=true modal=true buttons="#buttons" closed=true>
     <style>
@@ -30,7 +30,7 @@
 
         <div id="terms_pay_div" class="fitem" >
             <label>付费方式:</label>
-            <select id="terms_pay" name="terms_pay"  class="textbox" style="width: 245px;" >
+            <select id="terms_pay" name="terms_pay"  class="textbox" style="width: 253px;" >
                 <option value="1">现金</option>
                 <option value="2">刷卡</option>
             </select>
@@ -40,7 +40,7 @@
             <label>缴费人:</label>
             <input id="rc_person" name="rc_person" class="textbox" maxlength="20">
         </div>
-        <div class="fitem">
+        <div class="fitem" id="discount_change">
             <label>折扣变动:</label>
             <span>否</span><input  type="radio" name="is_reduce" onclick="removeReduce()" style="width: 30px;"value="0">
             <span>是</span><input  type="radio" name="is_reduce"  onclick="reducePrice()" style="width: 30px;" value="1">
@@ -48,7 +48,7 @@
 
         <div id="checker_div" class="fitem">
             <label >审批人:</label>
-            <select id='checker' class='textbox' style='width: 245px;'>
+            <select id='checker' class='textbox' style='width: 253px;'>
                   <volist name='checker' id='vo'>
                       <option value='{$vo.id}'>{$vo.name}</option>
                   </volist>

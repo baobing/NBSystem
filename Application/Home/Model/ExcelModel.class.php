@@ -33,7 +33,7 @@ class ExcelModel extends BaseModel {
     }
     function getExcelFinance(){
         $data=D("Query")->getSampleList(3);
-        $p_data=array("protocol_num","sample_num","date","client_name","inspected_name","project_name", "price","discount_price",
+        $p_data=array("protocol_num","sample_num","date","client_name","inspected_name","project_name", "nb_protocol.price","discount_price",
             "payed_price","contract_num","invoice_num","first_price","back_reason","payed","is_pay","terms_pay","test_detail",
             "send_person","tel","receive_person","time_pay","operator_name");
         $head=$_SESSION['finance'];
@@ -58,7 +58,7 @@ class ExcelModel extends BaseModel {
     function getExcelSample(){
         $data=D("Query")->getSampleList(2);
 
-        if(!isset($_GET["testDetail"])){  //¼ì²âÏîÄ¿²»±ØÏÔÊ¾Ï¸½Ú
+        if(!isset($_GET["testDetail"])){  //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Ï¸ï¿½ï¿½
             $p_data=array("date","protocol_num","sample_num","sample_name","client_name","project_name",
                 "send_person","tel","price", "test_item","receive_person","step","is_pay","take_type","take_person",
                 "mail_contact","mail_tel","mail_number","mail_address","send_num");

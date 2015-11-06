@@ -82,9 +82,7 @@ class CostController extends BaseController {
         else
             $this->ajaxReturn(D("cost")->secondRefuse());
     }
-    public function takePay(){
-        $this->ajaxReturn(D("cost")->takePay());
-    }
+
     public function modifyInvoice(){  //修改发票号
         $db=M("nb_protocol");
         $dt=$db->create();
@@ -95,6 +93,10 @@ class CostController extends BaseController {
     public function submitSettle(){  //财务人员确定使用协议结算 并且进入step1
         $this->ajaxReturn(D("Cost")->submitSettle());
     }
+
+    /**
+     * TODO 立即支付 初次提交
+     */
     public function nowPay(){         //立即支付 更新财务信息 和 流程步骤
 
         if(0 == $_POST["is_reduce"]){
@@ -103,6 +105,9 @@ class CostController extends BaseController {
             $flg = D("Cost")->payDiscount();
         }
         $this->ajaxReturn($flg);
+    }
+    public function takePay(){
+        $this->ajaxReturn(D("cost")->takePay());
     }
     public function detailPrice(){
         $where['protocol_num']=array("like",$_POST["protocol_num"]);

@@ -188,6 +188,7 @@ class CostModel extends BaseModel {
         $dt_prt["plan_pay"] = 0;
         $dt_prt["check_pay"] = 0;
         $dt_prt["is_pay"] = 2;
+        $dt_prt["payed"] = 1;
         $flg=$db_prt->save($dt_prt);
         if(!$flg) return false;
         //付费日志更新

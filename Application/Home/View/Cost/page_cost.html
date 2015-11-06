@@ -101,6 +101,7 @@
             }else if(row.check_pay==12){                    //打折结算已经付款
                 post_data["is_pay"]=2;
                 post_data["payed"]=1;
+                confirmStr = "<h3 >请收取"+row.plan_pay+"元！</h3>"
             }else if(row.check_pay == 14){ // 退回协议通过
                 confirmStr = "<h3 >金额变动"+row.plan_pay+"元，请出纳！</h3>"
             }
@@ -129,7 +130,7 @@
         confirmPost("#dg",confirmStr,url,post_data)
     }
     // 0未付费 1取报告 2立即 3协议 4挂账 5退回
-    var payType = 2;
+    var payType = 0;
     /**
      *  TODO 选择结算方法
      */
@@ -143,6 +144,7 @@
             backPay(row);
             return ;
         }
+        payType = 2;
         var str="<div id='pay_type_div'>支付类型：</div>" ;
         str+="<div><span style='width: 70px;display: inline-block;'>立即支付</span><input name='is_pay' type='radio'checked value='2' onclick='changeType(this)' ></div> ";
         str+="<div style='margin-left: 40px;'><span style='width: 70px;display: inline-block;'>取报告付款</span><input name='is_pay'type='radio' value='1' onclick='changeType(this)'/> </div>";
@@ -152,10 +154,9 @@
         str+="<div style='margin-left: 42px;'><span style='width: 70px;display: inline-block;'>挂账</span><input name='is_pay' type='radio' value='4'onclick='changeType(this)' /></div> ";
 
         $.messager.confirm("操作提示",str,function(data){
-            debugger;
             if(data){
 
-                var res= payType;
+                var res= $("[name='is_pay']:checked").val();
                 if(1 == res){
                     takePay(row);
                 }else if(2 == res){
@@ -177,7 +178,6 @@
         });
     }
     function changeType(t){
-        alert(t.value)
         payType = t.value;
     }
     /**
@@ -190,9 +190,11 @@
         $("#discount_price_div").hide();
         $("#plan_pay_div").hide();
         $("#checker_div").show();
+        $("#discount_change").hide();
         $("#terms_pay_div").hide();
         fillDialogInfo(row);
         $("#terms_pay").val(1);
+        $("#dlg").dialog("open");
     }
     /**
      * TODO 立即支付处理,弹出框
@@ -204,6 +206,7 @@
         $("#discount_price_div").show();
         $("#plan_pay_div").show();
         $("#checker_div").hide();
+        $("#discount_change").show();
         $("#terms_pay_div").show();
         fillDialogInfo(row);
         $("#terms_pay").val(1);
@@ -283,12 +286,7 @@
     function savePayInfo(){
         var row=isSelected("#dg");
         if(1 == payType ){
-            data["is_pay"] = 1;
-            data["payed"] = 0;
-            data["check_pay"] = "1";
-            data["leader"]=$("#checker").val();
-            url="__URL__/takePay";
-
+            saveTakePay(row);
         }else if(2 == payType){
             saveNowPay(row);
         }else if(5 == payType ){
@@ -329,11 +327,12 @@
         });*/
     }
     /**
-     * TODO 立即支付全部
+     * TODO 保存立即支付
      */
     function saveNowPay(row){
         var data = {
-            id:row.id,person_pay:$('#rc_person').val(),
+            id:row.id,
+            person_pay:$('#rc_person').val(),
             terms_pay:$('#terms_pay').val(),
             plan_pay:$('#plan_pay').val(),
             discount_price:$("#discount_price").val(),
@@ -342,6 +341,19 @@
             leader:$("#checker").val()
         };
         url="__URL__/nowPay";
+        confirmPost("#dg","确认结算么?",url,data,savePayFn);
+    }
+    /**
+     * TODO 保存取报告付款信息
+     */
+    function saveTakePay(row){
+        var data = {
+            id:row.id,
+            person_pay:$('#rc_person').val(),
+            invoice_num:$("#invoice_num").val(),
+            leader:$("#checker").val()
+        };
+        url="__URL__/takePay";
         confirmPost("#dg","确认结算么?",url,data,savePayFn);
     }
     function savePayFn(data){
@@ -375,8 +387,8 @@
         var price = $("#price").val();
         var payedPrice = $("#payed_price").val();
         var planPay = $("#plan_pay").val();
-        var discountPrice = price - payedPrice - planPay;
-        $("#discount_pay").val(discountPrice);
+        var discountPrice = parseFloat(price) - parseFloat(payedPrice) - parseFloat(planPay);
+        $("#discount_price").val(discountPrice);
     }
     function bntClickSettle(){             //协议结算 付款按钮点击
         var rows=$("#dg").datagrid("getChecked");
