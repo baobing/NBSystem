@@ -172,6 +172,7 @@
             }else if(row.check_pay==12){                    //打折结算已经付款
                 post_data["is_pay"]=2;
                 post_data["payed"]=1;
+                confirmStr = "<h3 >请收取"+row.plan_pay+"元！</h3>"
             }else if(row.check_pay == 14){ // 退回协议通过
                 confirmStr = "<h3 >金额变动"+row.plan_pay+"元，请出纳！</h3>"
             }
@@ -200,7 +201,7 @@
         confirmPost("#dg",confirmStr,url,post_data)
     }
     // 0未付费 1取报告 2立即 3协议 4挂账 5退回
-    var payType = 2;
+    var payType = 0;
     /**
      *  TODO 选择结算方法
      */
@@ -214,6 +215,7 @@
             backPay(row);
             return ;
         }
+        payType = 2;
         var str="<div id='pay_type_div'>支付类型：</div>" ;
         str+="<div><span style='width: 70px;display: inline-block;'>立即支付</span><input name='is_pay' type='radio'checked value='2' onclick='changeType(this)' ></div> ";
         str+="<div style='margin-left: 40px;'><span style='width: 70px;display: inline-block;'>取报告付款</span><input name='is_pay'type='radio' value='1' onclick='changeType(this)'/> </div>";
@@ -223,10 +225,9 @@
         str+="<div style='margin-left: 42px;'><span style='width: 70px;display: inline-block;'>挂账</span><input name='is_pay' type='radio' value='4'onclick='changeType(this)' /></div> ";
 
         $.messager.confirm("操作提示",str,function(data){
-            debugger;
             if(data){
 
-                var res= payType;
+                var res= $("[name='is_pay']:checked").val();
                 if(1 == res){
                     takePay(row);
                 }else if(2 == res){
@@ -248,7 +249,6 @@
         });
     }
     function changeType(t){
-        alert(t.value)
         payType = t.value;
     }
     /**
@@ -261,9 +261,11 @@
         $("#discount_price_div").hide();
         $("#plan_pay_div").hide();
         $("#checker_div").show();
+        $("#discount_change").hide();
         $("#terms_pay_div").hide();
         fillDialogInfo(row);
         $("#terms_pay").val(1);
+        $("#dlg").dialog("open");
     }
     /**
      * TODO 立即支付处理,弹出框
@@ -275,6 +277,7 @@
         $("#discount_price_div").show();
         $("#plan_pay_div").show();
         $("#checker_div").hide();
+        $("#discount_change").show();
         $("#terms_pay_div").show();
         fillDialogInfo(row);
         $("#terms_pay").val(1);
@@ -446,8 +449,8 @@
         var price = $("#price").val();
         var payedPrice = $("#payed_price").val();
         var planPay = $("#plan_pay").val();
-        var discountPrice = price - payedPrice - planPay;
-        $("#discount_pay").val(discountPrice);
+        var discountPrice = parseFloat(price) - parseFloat(payedPrice) - parseFloat(planPay);
+        $("#discount_price").val(discountPrice);
     }
     function bntClickSettle(){             //协议结算 付款按钮点击
         var rows=$("#dg").datagrid("getChecked");
@@ -561,7 +564,7 @@
     </table>
 </div>
 </div>
-<?php if($type == 0 or $type == 3 or $type == 6): ?><div id="dlg" class="easyui-dialog" title="付费信息" style="width:430px;height:600px;top:10px;"
+<?php if($type == 0 or $type == 3 or $type == 6): ?><div id="dlg" class="easyui-dialog" title="付费信息" style="width:430px;height:550px;top:10px;"
      toolbar="#toolbar"
      iconCls='icon-save'resizable=true modal=true buttons="#buttons" closed=true>
     <style>
@@ -592,7 +595,7 @@
 
         <div id="terms_pay_div" class="fitem" >
             <label>付费方式:</label>
-            <select id="terms_pay" name="terms_pay"  class="textbox" style="width: 245px;" >
+            <select id="terms_pay" name="terms_pay"  class="textbox" style="width: 253px;" >
                 <option value="1">现金</option>
                 <option value="2">刷卡</option>
             </select>
@@ -602,7 +605,7 @@
             <label>缴费人:</label>
             <input id="rc_person" name="rc_person" class="textbox" maxlength="20">
         </div>
-        <div class="fitem">
+        <div class="fitem" id="discount_change">
             <label>折扣变动:</label>
             <span>否</span><input  type="radio" name="is_reduce" onclick="removeReduce()" style="width: 30px;"value="0">
             <span>是</span><input  type="radio" name="is_reduce"  onclick="reducePrice()" style="width: 30px;" value="1">
@@ -610,7 +613,7 @@
 
         <div id="checker_div" class="fitem">
             <label >审批人:</label>
-            <select id='checker' class='textbox' style='width: 245px;'>
+            <select id='checker' class='textbox' style='width: 253px;'>
                   <?php if(is_array($checker)): $i = 0; $__LIST__ = $checker;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option value='<?php echo ($vo["id"]); ?>'><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
             </select>
         </div>
