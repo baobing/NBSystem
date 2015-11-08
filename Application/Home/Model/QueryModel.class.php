@@ -229,6 +229,12 @@ class QueryModel extends BaseModel {
         if(isset($_GET["payed"])){
             $where['payed']=array("eq",$_GET["payed"]);
         }
+        if(isset($_GET['client'])&&$_GET['client']!=''){
+            $where['client']= $_GET['client'];
+        }
+        if(isset($_GET['batchPay'])&&$_GET['batchPay']!=''){
+            $where['is_pay']= array("in",array(3,4));
+        }
         return $where;
     }
     function getPostData($Data,$where){
@@ -274,6 +280,7 @@ class QueryModel extends BaseModel {
         if(isset($Data['payed'])&&$Data['payed']!=''){
             $where['payed']= $Data['payed'];
         }
+
         if(isset($Data['industry_type'])&&$Data['industry_type']!=''){
             $where['industry_type']= $Data['industry_type'];
         }

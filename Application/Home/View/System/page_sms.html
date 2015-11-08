@@ -4,7 +4,7 @@
             $("[name='is_sms']").val("{$is_sms}");
             $("#saveBtn").click(function(){
                 var data = serializeObject("#fm");
-                debugger;
+
                 $.post("__URL__/setSms",data,function(data){
                     if(data){
                         showSuccess();

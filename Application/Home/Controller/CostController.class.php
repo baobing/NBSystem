@@ -2,7 +2,12 @@
 namespace Home\Controller;
 use Think\Controller;
 class CostController extends BaseController {
-
+    /**
+     * todo 批量处理界面
+     */
+    public function pageBatch(){
+        $this->display("page_batch");
+    }
     public function getRechargeList($id){
         $where='nb_recharge.client_id='.$id;
         $orderSql='nb_recharge.id desc';
@@ -10,16 +15,15 @@ class CostController extends BaseController {
         $db=M('nb_recharge')->join("nb_userinfo on nb_userinfo.id=nb_recharge.user_id");
         D('Base')->dataList($db,$where,$orderSql,$field);
     }
-    public function saveRecharge($id=0){
-        $db=M('nb_recharge');
-        $dt=$db->create();
-        $dt['user_id']=$_SESSION['user']['id'];
-        $dt['rc_date']=date("Y-m-d H:i:s",time());
-        if($id==0){
-            $sql="UPDATE nb_client set balance = balance+".$dt['rc_cnt']." where id=".$dt['client_id'];
-            M()->query($sql);
-            $this->ajaxReturn($db->add($dt));
-        }
+
+
+    /**
+     * todo 改变余额
+     */
+    public function saveBalance(){
+
+        $flg = D("Cost")->saveBalance();
+        $this->ajaxReturn($flg);
     }
     public function pageSettle(){
         $this->display('page_settle');
@@ -39,6 +43,10 @@ class CostController extends BaseController {
     public function reduce(){    //打折申请
             $this->ajaxReturn(D('Cost')->reduce());
     }
+
+    /**
+     * todo XXXXXXXX
+     */
     public function listPayed(){
         D('Cost')->listPayed();
     }
@@ -59,6 +67,10 @@ class CostController extends BaseController {
     public function stepCost(){
         $this->ajaxReturn(D("Cost")->stepCost());
     }
+
+    /**
+     * todo 财务确认 很杂的函数 最好进行拆分
+     */
     public function checkConfirm(){   //财务审批结果确认
         if($_POST["check_pay"]>10&&$_POST["check_pay"]<20){ //通过的话刷新
             $res = D("Cost")->checkConfirm();
@@ -73,6 +85,10 @@ class CostController extends BaseController {
     public function modifyPrice(){   //完成付款协议费用修改
         $this->ajaxReturn(D("cost")->modifyPrice());
     }
+
+    /**
+     * TODO 取报告提交审核
+     */
     public  function stepTake(){   //交给审核者
         $this->ajaxReturn(D("cost")->stepTake());
     }
@@ -106,13 +122,39 @@ class CostController extends BaseController {
         }
         $this->ajaxReturn($flg);
     }
+
+    /**
+     * todo 取报告付费
+     */
     public function takePay(){
-        $this->ajaxReturn(D("cost")->takePay());
+
+        if(0 == $_POST["is_reduce"]){
+            echo "111";
+            $flg = D("Cost")->payTake();
+            echo $flg;
+        }else{
+            echo "222";
+            $flg = D("Cost")->payTakeDiscount();
+        }
+        $this->ajaxReturn($flg);
+    }
+
+    /**
+     * todo 挂账审核
+     */
+    public function stepHung(){
+        $this->ajaxReturn(D("cost")->stepHung());
     }
     public function detailPrice(){
         $where['protocol_num']=array("like",$_POST["protocol_num"]);
         $dt=M("nb_sample")->where($where)->field("test_item")->select();
         $this->ajaxReturn($dt);
+    }
+    /**
+     * todo 确认通过挂账
+     */
+    public function saveHungPay(){
+        $this->ajaxReturn(D("cost")->saveHungPay());
     }
     /**
      * 退回报告 处理 提交审核
@@ -123,5 +165,21 @@ class CostController extends BaseController {
         $dt_prt["check_pay"] = 4;
         $flg = $db_prt->save($dt_prt);
         $this->ajaxReturn($flg);
+    }
+    /**
+     * todo 返回日志信息
+     */
+    public function getBalanceLog(){
+        $rows = M("nb_balance_log")->join("nb_client as c on c.id = nb_balance_log.company_id")
+                ->field("nb_balance_log.*,company")->where("company_id = ".$_GET["id"])->select();
+        $data["rows"] = $rows;
+        $data["total"] = count($rows);
+        $this->ajaxReturn($data);
+    }
+    /**
+     * todo 批量处理
+     */
+    public function batchPay(){
+        $this->ajaxReturn(D("cost")->batchPay());
     }
 }
