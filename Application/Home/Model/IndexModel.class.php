@@ -55,8 +55,9 @@ class IndexModel extends BaseModel {
                          array("menuid"=>"62","menuname"=>"<span class='tab-title'>审批中协议</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/1"),
                          array("menuid"=>"63","menuname"=>'<span class="tab-title">已审批协议</span> <span id="cnt2"  style="color: red;margin-left:5px;"></span>',"icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/2"),
                          array("menuid"=>"64","menuname"=>"<span class='tab-title'>取报告付款</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/3"),
-                         array("menuid"=>"67","menuname"=>"<span class='tab-title'>挂账协议</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/6"),
-                         array("menuid"=>"65","menuname"=>"<span class='tab-title'>协议结算</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/4"),
+                         /*array("menuid"=>"67","menuname"=>"<span class='tab-title'>挂账协议</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/6"),
+                         array("menuid"=>"65","menuname"=>"<span class='tab-title'>协议结算</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/4"),*/
+                         array("menuid"=>"66","menuname"=>"<span class='tab-title'>批量处理协议</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageBatch"),
                          array("menuid"=>"66","menuname"=>"<span class='tab-title'>已付款协议</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/5"),
                          array("menuid"=>"69","menuname"=>"<span class='tab-title'>合同信息</span>","icon"=>"icon-large-clipart","url"=>__APP__.'/Home/System/pageContract/type/1'),
                      )

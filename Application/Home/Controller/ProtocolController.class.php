@@ -285,7 +285,6 @@ class ProtocolController extends BaseController {
         $db = M("nb_contract_charge");
         $where["contract_num"] = $_POST["contract_num"];
         $dt = $db->where($where)->find();
-
         $this->ajaxReturn($dt);
     }
 }
