@@ -15,28 +15,6 @@ class WangOfficeController extends BaseController {
      *
      */
    public function saveTest(){
-       $db = M("nb_sample");
-       $rows = $_POST["rows"];
-       $where1["protocol_num"] = $rows[0]["protocol_num"];
-       //保存样品信息
-       foreach($rows as $key=>$value){
-           $dt = $db->create($value);
-           $dt["step"] = 0;
-           $flg = $db->save($dt);
-           if(!$flg){
-               $this->ajaxReturn(flase);
-           }
-       }
-       //计算现在的总价
-       $db_prt = M("nb_protocol");
-       $dt_prt = $db_prt->where($where1)->field("id")->find();
-       $sum_price = $db->where($where1)->sum("price");
-       $dt_prt["price"] = $sum_price;
-       $dt_prt["back_reason"] = $_POST["back_reason"];
-       $dt_prt["is_finance"] = 1;
-       $dt_prt["is_pay"] = 0;
-
-       $flg = $db_prt->save($dt_prt);
-       $this->ajaxReturn($flg);
+       $this->ajaxReturn(D("Wang")->saveTest());
    }
 }

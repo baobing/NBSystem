@@ -29,8 +29,8 @@
                     });
                 },
                 rowStyler:function(index,row){
-                    if (row.is_finance == 1){
-                        return 'color:green;'; // return inline style
+                    if (row.is_finance == 0){
+                        return 'color:red;'; // return inline style
                     }
                 }
             });
@@ -95,9 +95,6 @@
         var row=$('#dg').datagrid('getSelected');
         if(row==null){
             $.messager.alert("操作提示",'请先选择一行');
-            return ;
-        }else if(row.is_back == 1){
-            $.messager.alert("操作提示",'该协议处于退回状态,请在"退回报告"中处理');
             return ;
         }else if(row.is_finance == 1){
             $.messager.alert("操作提示",'已经转交财务室');

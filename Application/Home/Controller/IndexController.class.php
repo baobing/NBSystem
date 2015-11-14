@@ -44,8 +44,10 @@ class IndexController extends BaseController {
     }
     public function  getCnt(){
         $where1["protocol_step"]=0;
-        $where1["is_pay"]=0;                      //待处理
+
         $where1["is_finance"] = 1;
+        $where1["check_pay"] = 0;
+        $where1['_query'] = 'is_pay=0&is_back=1&_logic=or';                //待处理
         $data[1]=M('nb_protocol')->where($where1)->count();
 
         $where2["check_pay"]=array("gt",10);     //审批完成
@@ -90,5 +92,8 @@ class IndexController extends BaseController {
         $data[8]=M('nb_protocol')->where($where8)->count();
         $this->ajaxReturn($data);
 
+        $where9="is_back = 1";     //取报告审批
+        $data[9]=M('nb_sample')->where($where9)->count();
+        $this->ajaxReturn($data);
     }
 }

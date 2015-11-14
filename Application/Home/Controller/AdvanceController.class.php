@@ -21,7 +21,9 @@ class AdvanceController extends BaseController {
         $this->ajaxReturn($flg);
     }
     public function pageSuccess(){
-        $this->assign("user",$_SESSION["advance"]);
+        $DB=M('nb_advance_user');
+        $user = $DB->where("id = ".$_GET["id"])->find();
+        $this->assign("user",$user);
         $this->display("success");
     }
     public function validUser(){

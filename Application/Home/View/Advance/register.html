@@ -182,11 +182,14 @@
                       })
                       .on('success.form.bv', function(e) {
                           e.preventDefault();
-                          var $form = $(e.target);
-                          var bv = $form.data('bootstrapValidator');
-                          $.post($form.attr('action'), $form.serialize(), function(result) {
-                             if(result) location.href="__URL__/pageSuccess";
-                              else alert("出错");
+                          var form = $(e.target);
+                          var bv = form.data('bootstrapValidator');
+                          $.post(form.attr('action'), form.serializeArray(), function(result) {
+                             if(result) {
+                                 location.href="__URL__/pageSuccess/id/"+result;
+                             } else{
+                                 alert("出错");
+                             }
                           }, 'json');
                       });
           });

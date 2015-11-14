@@ -398,11 +398,10 @@
             </div>
         </div>
 
-        <div class="panel-outside" >
-            <div >
+        <div class="panel-outside" style="height:195px;" >
             <include file="table_sample"/>
 
-            <div style="width: 15%; float: left;height: 200px;overflow: hidden;">
+            <div style="width: 100px; float: right;height: 200px;overflow: hidden;">
                 <a  id="add_btn" class="easyui-linkbutton" style="width: 100px;height: 30px;float: right;" >添加样品</a>
                 <div id="del_btn" class="easyui-linkbutton"  onclick="delBtnClick()"
                      style="width: 100px;height: 30px;margin-top: 15px;float: right;">删除样品</div>
@@ -414,7 +413,7 @@
                 </div>
             </div>
         </div>
-        <div style="width: 100%;height: 200px;">
+        <div class="panel-outside">
             <div style="float: left">
                 <div class="my-lable">合同编号：</div>
                 <select id="contract_num" name="contract_num"  style="float: left" panelHeight ="auto" >
@@ -434,11 +433,11 @@
             </if>
 
             <if condition="$type eq 2">
-                <a  href='__APP__/Home/Query/protocolPage' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
+                <a  href='__APP__/Home/Query/protocolPage' class="easyui-linkbutton my-btn-right"  data-options="iconCls:'icon-back'"  >取消</a>
                 <elseif condition="$type eq 1 and $protocol_step eq 1"/>
                 <a  href='__APP__/Home/Query/pageAdvance' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
                 <else/>
-                <a  href='__APP__/Home/Protocol/addPage' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
+                <a  href='__APP__/Home/Protocol/addPage' class="easyui-linkbutton my-btn-right"  data-options="iconCls:'icon-back'"  >取消</a>
             </if>
 
             <div id="save_btn"class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-save'">保存</div>

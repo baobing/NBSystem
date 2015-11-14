@@ -65,7 +65,7 @@ class QueryModel extends BaseModel {
             ->join("nb_common on nb_common.id=nb_protocol.project_id")
             ->join("left join nb_userinfo on nb_userinfo.id=tester");
         $order='nb_sample.id desc';
-        $field='nb_protocol.id as p_id ,nb_sample.*,nb_protocol.*,nb_common.name as project_name,ins.company as inspected_name,
+        $field='nb_protocol.id as p_id ,nb_protocol.*,nb_sample.*,nb_common.name as project_name,ins.company as inspected_name,
           nb_sample.id as s_id,nb_client.company as client_name,nb_userinfo.name as tester_name';
         $where["protocol_step"]=0;
         if(isset($_GET["is_printed"]))   //报告是否被打印判断
@@ -234,6 +234,9 @@ class QueryModel extends BaseModel {
         }
         if(isset($_GET['batchPay'])&&$_GET['batchPay']!=''){
             $where['is_pay']= array("in",array(3,4));
+        }
+        if(isset($_GET['prgPay'])&&$_GET['prgPay']!=''){
+            $where['_query'] = 'is_pay=0&is_back=1&_logic=or';
         }
         return $where;
     }

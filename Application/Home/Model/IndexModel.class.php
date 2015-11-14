@@ -14,7 +14,7 @@ class IndexModel extends BaseModel {
                     "menus"=>array(
                         array("menuid"=>"11","menuname"=>"<span class='tab-title'>新的协议书</span>","icon"=>"icon-edit","url"=>__APP__.'/Home/Protocol/addPage'),
                         array("menuid"=>"12","menuname"=>"<span class='tab-title'>预委托列表</span>","icon"=>"icon-search","url"=>__APP__.'/Home/Query/pageAdvance'),
-                        array("menuid"=>"11","menuname"=>"<span class='tab-title'>退回报告</span>","icon"=>"icon-edit","url"=>__APP__.'/Home/WangOffice/pageModify'),
+                        array("menuid"=>"11","menuname"=>"<span class='tab-title'>退回报告<span id='cnt9' style='color: red;margin-left: 10px;'></span></span>","icon"=>"icon-edit","url"=>__APP__.'/Home/WangOffice/pageModify'),
                         array("menuid"=>"12","menuname"=>"<span class='tab-title'>协议书列表</span>","icon"=>"icon-search","url"=>__APP__.'/Home/Query/protocolPage'),
                         array("menuid"=>"16","menuname"=>"<span class='tab-title'>收发登记表</span>","icon"=>"icon-search","url"=>__APP__.'/Home/Query/samplePage/type/5'),
                         array("menuid"=>"13","menuname"=>"<span class='tab-title'>待打印报告</span>","icon"=>"icon-search","url"=>__APP__.'/Home/Query/samplePage/is_printed/0/type/6'),
@@ -60,6 +60,8 @@ class IndexModel extends BaseModel {
                          array("menuid"=>"66","menuname"=>"<span class='tab-title'>批量处理协议</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageBatch"),
                          array("menuid"=>"66","menuname"=>"<span class='tab-title'>已付款协议</span>","icon"=>"icon-large-chart","url"=>__APP__."/Home/Cost/pageCost/type/5"),
                          array("menuid"=>"69","menuname"=>"<span class='tab-title'>合同信息</span>","icon"=>"icon-large-clipart","url"=>__APP__.'/Home/System/pageContract/type/1'),
+                         array("menuid"=>"94","menuname"=>"<span class='tab-title'>收费信息报表</span>","icon"=>"icon-chart","url"=>__APP__."/Home/Manger/pageFinance"),
+                         array("menuid"=>"92","menuname"=>"<span class='tab-title'>收费日志报表</span>","icon"=>"icon-chart","url"=>__APP__."/Home/Manger/pageRecharge"),
                      )
                  ),
                 array("menuid"=>"9","icon"=>"icon","menuname"=>"管理人员操作",

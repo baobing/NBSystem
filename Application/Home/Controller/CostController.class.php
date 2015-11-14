@@ -171,7 +171,8 @@ class CostController extends BaseController {
      */
     public function getBalanceLog(){
         $rows = M("nb_balance_log")->join("nb_client as c on c.id = nb_balance_log.company_id")
-                ->field("nb_balance_log.*,company")->where("company_id = ".$_GET["id"])->select();
+                ->field("nb_balance_log.*,company")->order("nb_balance_log.id desc")->
+            where("company_id = ".$_GET["id"])->select();
         $data["rows"] = $rows;
         $data["total"] = count($rows);
         $this->ajaxReturn($data);
@@ -181,5 +182,11 @@ class CostController extends BaseController {
      */
     public function batchPay(){
         $this->ajaxReturn(D("cost")->batchPay());
+    }
+    /**
+     * todo 审核返回
+     */
+    public function stepBack(){
+        $this->ajaxReturn(D("cost")->stepBack());
     }
 }

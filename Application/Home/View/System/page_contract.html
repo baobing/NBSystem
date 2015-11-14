@@ -43,26 +43,17 @@
             <div class="fitem">
                 <label>委托单位:</label>
                 <select id="client_id" name="company_id" class="easyui-combobox" required=""  style="width: 255px;">
-                    <volist name="company" id="vo">
-                        <option value="{$vo.id}">{$vo.company}{$vo.id}</option>
-                    </volist>
                 </select>
             </div>
             <div class="fitem">
                 <label>受检单位:</label>
                 <select id="inspected_id" name="inspected_id" class="easyui-combobox" required=""  style="width: 255px;">
-                    <volist name="company" id="vo">
-                        <option value="{$vo.id}">{$vo.company}{$vo.id}</option>
-                    </volist>
                 </select>
             </div>
         </if>
         <div class="fitem">
             <label>工程名称:</label>
             <select id="project_id" name="project_id" class="easyui-combobox" required=""  style="width: 255px;">
-                <volist name="project" id="vo">
-                    <option value="{$vo.id}">{$vo.name}</option>
-                </volist>
             </select>
         </div>
         <div class="fitem">
@@ -103,6 +94,21 @@
             onDblClickRow: function(index,row){
                 editUnit();
             }
+        });
+        $('#client_id').combobox({
+            url:'__URL__/getUnitList/type/0',
+            valueField:'id',
+            textField:'company'
+        });
+        $('#inspected_id').combobox({
+            url:'__URL__/getUnitList/type/0',
+            valueField:'id',
+            textField:'company'
+        });
+        $('#project_id').combobox({
+            url:'__URL__/getUnitList/type/1',
+            valueField:'id',
+            textField:'name'
         });
     });
     var url;
@@ -147,6 +153,7 @@
         if($("#new_fm").form('validate')){
             $.post(url,data,function(){
                 $('#dg').datagrid("reload");
+                comboboxReload();
                 $('#new_dlg').dialog('close');
             });
         }
@@ -165,6 +172,11 @@
                 }
             });
         }
+    }
+    function comboboxReload(){
+        $('#client_id').combobox('reload');
+        $('#inspected_id').combobox('reload');
+        $('#project_id').combobox('reload');
     }
 </script>
 <style type="text/css">

@@ -13,13 +13,13 @@
             $.messager.alert("操作提示","请先选中一行或多行");
             return ;
         }
-        for(var i =0;i < rows-1;i++){
+        for(var i =0;i < rows.length-1;i++){
             if(rows[i]["protocol_num"] != rows[i + 1]["protocol_num"]){
                 $.messager.alert("操作提示","非同一协议,不可同时修改!");
                 return ;
             }
         }
-        for(var i =0;i < rows;i++){
+        for(var i =0;i < rows.length;i++){
             if(1 == rows[i]["is_finance"] ){
                 $.messager.alert("操作提示","该协议处于财务审核阶段,不可修改!");
                 return ;

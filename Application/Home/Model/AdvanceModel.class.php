@@ -41,10 +41,6 @@ class AdvanceModel extends BaseModel {
         }
         $DB->register_date=date("Y-m-d H:i:s",time());
         $flg=$DB->add();
-      /*  if($flg){
-            session_start();
-            session('advance',$user);
-        }*/
         return $flg;
 
     }

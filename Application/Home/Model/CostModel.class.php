@@ -222,6 +222,19 @@ class CostModel extends BaseModel {
         return $db_prt->save($dt_prt);
     }
     /**
+     * TODO 返回报告 交给 审核者
+     */
+    function stepBack(){     //交给审核者取报告、挂账
+        $db_prt=M('nb_protocol');
+        $dt_prt=$db_prt->create();
+        $dt_prt["operator_pay"]=$_SESSION["user"]["id"];
+        $dt_prt["time_pay"]=date("Y-m-d H:i:s",time());
+        $dt_prt["plan_pay"] = $_POST["plan_pay"];
+        $dt_prt["check_pay"] = 4;
+     //   $dt_prt["is_pay"] = 5;
+        return $db_prt->save($dt_prt);
+    }
+    /**
      *  todo 取报告全额付款
      */
     function payTake(){
@@ -473,6 +486,7 @@ class CostModel extends BaseModel {
         $db = M("nb_balance_log");
         $dt = $db->create();
         $dt["type"] = 0;
+        $dt["is_pay"] = 0;
         $dt["create_time"] = date("Y-m-d H:i:s",time());
         $dt["update_time"] = date("Y-m-d H:i:s",time());
         $flg = $db->add($dt);

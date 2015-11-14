@@ -347,5 +347,43 @@ class ProgressModel extends BaseModel {
         }
 
     }
-
+    /**
+     * todo  质检报告退回给收发室
+     * is_back = 1;
+     * step = -1;
+     * 协议设置为退回 状态
+     */
+    public function testBack(){
+        $M = M("Rollback");
+        $M->startTrans();//开启事务
+        $ids = $_POST["ids"];
+        $db = M("nb_sample");
+        $nums = array();
+        foreach($ids as $id){
+            $dt_sample["id"] = $id;
+            $dt_sample["step"] = -1;
+            $dt_sample["is_back"] = 1;
+            $flg = $db->save($dt_sample);
+            if(!$flg){
+                echo 1;
+                $M->rollback();//事务有错回滚
+                return false;
+            }
+            //改变协议状态
+            $dtTmp = $db->where ("id = ".$id)->find();
+            array_push($nums, $dtTmp["protocol_num"]);
+        }
+        $db_protocol = M("nb_protocol");
+        $dt_protocol["is_back"] = 1;
+        $dt_protocol["is_finance"] = 0;
+        $dt_protocol["time_pay"] = date("Y-m-d H:i:s",time());
+        $where_prt["protocol_num"] = array("in",$nums);
+        $flg = $db_protocol->where($where_prt)->save($dt_protocol);
+        if(!$flg){
+            $M->rollback();//事务有错回滚
+            return json_encode($dt_protocol);
+        }
+        $M->commit();//提交事务成功
+        return true;
+    }
 } 

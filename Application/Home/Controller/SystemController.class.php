@@ -185,6 +185,25 @@ class SystemController extends BaseController {
         $data['rows']=$list;
         echo json_encode($data);
     }
+
+    /**
+     * @param int $type
+     * todo 返回给combobox
+     */
+    public function getUnitList($type = 0){
+        if($type==0){
+            $DB=M('nb_client');
+        }else{
+            $DB=M('nb_common');
+        }
+        $order=$_POST['order'];
+        $sort=$_POST['sort'];
+        $orderSql="";
+        $wSql='is_used=0 and type='.$type;
+        if(isset($sort)&&!empty($sort)){$orderSql=$sort." ".$order;}
+        $list=$DB->order( $orderSql)->where($wSql)->select();
+        echo json_encode($list);
+    }
     public function  submitUnit($type=0,$id=0){
         if($type==0){
             $DB=M('nb_client');
@@ -305,13 +324,6 @@ class SystemController extends BaseController {
      */
     function getContractList($type){
 
-      /*  if($type == 0){
-            $DB = M("nb_contract")->join("nb_common on nb_contract.project_id=nb_common.id")
-                ->join("left join  nb_userinfo on nb_userinfo.id=nb_contract.user_id");
-            $field="nb_contract.*,nb_common.name,nb_userinfo.name as operator_name";
-            $order="nb_contract.id desc";
-        }
-        else if($type == 1) {*/
         $DB = M("nb_contract_charge")->join("nb_common on nb_contract_charge.project_id = nb_common.id")
             ->join("left join  nb_userinfo on nb_userinfo.id = nb_contract_charge.user_id")
             ->join("left join  nb_client as client on client.id = nb_contract_charge.client_id")
@@ -328,9 +340,6 @@ class SystemController extends BaseController {
      * 协议提交
      */
     public function submitContract($id = 0,$type){
-      /*  if($type == 0){
-            $db = M("nb_contract");
-        }else{*/
         $db = M("nb_contract_charge");
 
         $this->notExitAdd();
@@ -339,12 +348,6 @@ class SystemController extends BaseController {
         $dt["user_id"] = $_SESSION["user"]["id"];
         $dt["sign_date"] = date("Y-m-d H:i:s",time());
         if($id==0){
-
-          /*  if($type == 0){
-                $where_delete["project_id"] =$_POST["project_id"];
-                $dt_delete= $db ->where($where_delete)->find();
-                $db->where("id = ".$dt_delete["id"])->delete();
-            }else{*/
             $where_delete["client_id"] =$_POST["company_id"];
             $where_delete["project_id"] =$_POST["project_id"];
             $where_delete["inspected_id"] =$_POST["inspected_id"];
@@ -363,9 +366,6 @@ class SystemController extends BaseController {
         if($type == 1){
             $db=M("nb_contract_charge");
         }
-  /*      else{
-          $db=M("nb_contract");
-        }*/
         $flg = $db->where("id=".$_GET["id"])->delete();
         $this->ajaxReturn($flg);
     }
@@ -397,7 +397,7 @@ class SystemController extends BaseController {
         $this->ajaxReturn($data);
     }
     /**
-     * 修改部长的排序界面
+     * todo 修改部长的排序界面
      */
     public function minsterPage(){
         $db = M("nb_industry_type");
@@ -407,7 +407,7 @@ class SystemController extends BaseController {
         $this->display("page_minster");
     }
     /**
-     * 修改部长的排序
+     * todo 修改部长的排序
      */
     public function modifySeq(){
         $db = M("nb_userinfo");
@@ -417,7 +417,7 @@ class SystemController extends BaseController {
 
     }
     /**
-     * 验证工程名称 委托单位 受检单位 是否存在 不存在添加
+     * todo 验证工程名称 委托单位 受检单位 是否存在 不存在添加
      */
     public function notExitAdd(){
 
