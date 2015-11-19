@@ -15,7 +15,7 @@ class ProgressModel extends BaseModel {
         $db_sample=M('nb_sample');
         $field=array("check_type","date","ins.company as inspected_name","price","protocol_num",
             "receive_person","nb_protocol.tel","witness_company","witness_contact",
-            "nb_client.company as client_name","nb_common.name as project_name","send_person");
+            "nb_client.company as client_name","nb_common.name as project_name"/*,"send_person"*/);
         $dt_protocol=D('Protocol')->getProtocolInfo(array("nb_protocol.id"=>intval($id)),$field,0);
 
         $field=array("delegate_cnt","make_num","molding_date","note","producing_area","sample_cnt",

@@ -62,6 +62,12 @@
                 addBtnClick();
             });
         }
+        //提交财务后的修改模式 可以直接保存
+        if("{$type}" == "2" && "{$isFinance}" == "1"){
+            $('#save_btn').click(function(){
+                saveBtnClick();
+            });
+        }
         $("#take_type").change(function(){
             if($(this).val()=="邮寄"){
                 $('#mail_table').show();
@@ -120,6 +126,10 @@
             }
         });
     }
+    /**
+     * 保存协议信息
+     * type =2 修改
+     */
     function saveBtnClick(){
         if(!$('#fm').form('validate')) {
             return ;
@@ -147,16 +157,15 @@
                 obj[notEmptyArr[i]] = "/"
             }
         }
-
-        var rowData=$('#p_dg').datagrid('getData');
-        obj["rows"]=rowData["rows"];
-
-
+        //不是修改已经提交此财务的协议
+        if(!("{$type}" == "2" && "{$isFinance}" == "1")){
+            var rowData=$('#p_dg').datagrid('getData');
+            obj["rows"]=rowData["rows"];
+        }
         var url='__URL__/submitProtocol/type/{$type}';
         if('{$type}'=='2'){
             url='__URL__/submitProtocol/type/{$type}/id/{$id}';
         }
-        //debugger;
         $.post(url,obj,function(id){
             if(id){
                 if("{$advance}"=="1"){              //预委托提交页面跳转
@@ -397,22 +406,25 @@
                 </table>
             </div>
         </div>
+        <if condition = "$isFinance neq 1">
+            <div class="panel-outside" style="height:195px;" >
+                <include file="table_sample"/>
 
-        <div class="panel-outside" style="height:195px;" >
-            <include file="table_sample"/>
-
-            <div style="width: 100px; float: right;height: 200px;overflow: hidden;">
-                <a  id="add_btn" class="easyui-linkbutton" style="width: 100px;height: 30px;float: right;" >添加样品</a>
-                <div id="del_btn" class="easyui-linkbutton"  onclick="delBtnClick()"
-                     style="width: 100px;height: 30px;margin-top: 15px;float: right;">删除样品</div>
-                <div style="width: 100px;margin-top: 15px;float: right;">
-                    <div style="width: 100px;height: 90px;" class="easyui-panel" title="试验费用">
-                        <input name="price" id="price" style="width: 70px;margin-left: 10px; margin-top: 15px;
+                <div style="width: 100px; float: right;height: 200px;overflow: hidden;">
+                    <a  id="add_btn" class="easyui-linkbutton" style="width: 100px;height: 30px;float: right;" >添加样品</a>
+                    <div id="del_btn" class="easyui-linkbutton"  onclick="delBtnClick()"
+                         style="width: 100px;height: 30px;margin-top: 15px;float: right;">删除样品</div>
+                    <div style="width: 100px;margin-top: 15px;float: right;">
+                        <div style="width: 100px;height: 90px;" class="easyui-panel" title="试验费用">
+                            <input name="price" id="price" style="width: 70px;margin-left: 10px; margin-top: 15px;
                 border-radius: 3px;height: 25px;border: 1px solid #999999;padding-left: 5px;" readonly>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </if>
+
+
         <div class="panel-outside">
             <div style="float: left">
                 <div class="my-lable">合同编号：</div>

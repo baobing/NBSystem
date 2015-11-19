@@ -478,6 +478,11 @@
         var var_data=[{key:"invoice_num",value:"#invoice_num4",type:0}];
         confirmPost("#dg",content,url,post_data,null,var_data);
     }
+    function bntBack(){
+        var  row = isSelected("#dg");
+        if(row == null) return;
+        confirmPost("#dg","确认退回么?","__URL__/backOffice",{id:row.id});
+    }
 </script>
 <div style="height: 100%;;width: 96%;position: fixed;">
     <include file="Cost:table_cost" xmlns="http://www.w3.org/1999/html"/>
@@ -492,6 +497,7 @@
     <a id="btn_search" class="easyui-linkbutton" plain="true" iconCls="icon-search">搜索</a>
     <if condition="$type eq 0">
         <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="bntClickProgress()">处理协议</a>
+        <a href="#" class="easyui-linkbutton" iconCls="icon-back" plain="true" onclick="bntBack()">退回收发室</a>
     </if>
     <if condition="$type eq 2">
         <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="checkConfirm()">确认审批</a>

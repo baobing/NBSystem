@@ -78,7 +78,7 @@
     $(function(){
         var data={};
         if("<?php echo ($type); ?>"=="0"){
-            data['url']="/NBSystem/index.php/Home/Query/getProtocolList/is_pay/0/check_pay/0/is_finance/1";
+            data['url']="/NBSystem/index.php/Home/Query/getProtocolList/prgPay/0/check_pay/0/is_finance/1";
             data['title']="待处理协议";
             data['onDblClickRow']=function(rowIndex, rowData){
                 bntClickProgress();
@@ -96,7 +96,7 @@
             data["url"]="/NBSystem/index.php/Home/Query/getProtocolList/is_pay/1/payed/0/check_pay/0/is_finance/1";
             data['title']="取报告付款协议列表";
             data['onDblClickRow']=function(rowIndex, rowData){
-                nowPay(rowData);
+                secondTakePay();
             }
         }else if("<?php echo ($type); ?>"=="4"){
             data["url"]="/NBSystem/index.php/Home/Query/getProtocolList/is_pay/3/payed/0/is_finance/1";
@@ -162,19 +162,22 @@
         var post_data={id:row.id};
         var url="/NBSystem/index.php/Home/Cost/checkConfirm";
         var confirmStr = "确认审批结果？";
-        if((row.is_pay==1||row.is_pay==4)&&(row.check_pay==12||row.check_pay==22)){  //第二次打折结算使用
+        if((row.is_pay==1)&&(row.check_pay==12||row.check_pay==22)){  //第二次打折结算使用
             url="/NBSystem/index.php/Home/Cost/second";
             post_data["check_pay"]=row.check_pay;
+            confirmStr = "<h3 >请收取"+row.plan_pay+"元！</h3>"
+        }else if(13 == row.check_pay){
+            if( row.check_pay < 20 ){
+                url = "/NBSystem/index.php/Home/Cost/saveHungPay";
+            }
         }
         else if(row.check_pay<20){
-            if(row.check_pay==11||row.check_pay==13){        //取报告付款 挂账 未付款
+            if(row.check_pay==11){        //取报告付款 挂账 未付款
                 post_data["payed"]=0;
             }else if(row.check_pay==12){                    //打折结算已经付款
                 post_data["is_pay"]=2;
                 post_data["payed"]=1;
                 confirmStr = "<h3 >请收取"+row.plan_pay+"元！</h3>"
-            }else if(row.check_pay == 14){ // 退回协议通过
-                confirmStr = "<h3 >金额变动"+row.plan_pay+"元，请出纳！</h3>"
             }
             post_data["step"]=1;                             //进入部门主任步骤
             post_data["check_pay"]=row.check_pay;
@@ -183,9 +186,7 @@
         }else{                                               //拒绝就清空所有信息
             //退回协议 领导未通过
             if(row.check_pay==24){
-                post_data["check_pay"] = 24;
-                post_data["price"] = row.original_price;
-                post_data["protocol_num"] = row.protocol_num;
+                post_data["check_pay"] = 0;
             } else{
                 post_data["terms_pay"]=0;
                 post_data["plan_pay"]=0;
@@ -217,11 +218,11 @@
         }
         payType = 2;
         var str="<div id='pay_type_div'>支付类型：</div>" ;
-        str+="<div><span style='width: 70px;display: inline-block;'>立即支付</span><input name='is_pay' type='radio'checked value='2' onclick='changeType(this)' ></div> ";
-        str+="<div style='margin-left: 40px;'><span style='width: 70px;display: inline-block;'>取报告付款</span><input name='is_pay'type='radio' value='1' onclick='changeType(this)'/> </div>";
         if(null != row.discount) { //
             str += "<div style='margin-left: 42px;'><span style='width: 70px;display: inline-block;'>协议结算</span><input name='is_pay' type='radio' value='3' onclick='changeType(this)'/></div> ";
         }
+        str+="<div><span style='width: 70px;display: inline-block;'>立即支付</span><input name='is_pay' type='radio'checked value='2' onclick='changeType(this)' ></div> ";
+        str+="<div style='margin-left: 40px;'><span style='width: 70px;display: inline-block;'>取报告付款</span><input name='is_pay'type='radio' value='1' onclick='changeType(this)'/> </div>";
         str+="<div style='margin-left: 42px;'><span style='width: 70px;display: inline-block;'>挂账</span><input name='is_pay' type='radio' value='4'onclick='changeType(this)' /></div> ";
 
         $.messager.confirm("操作提示",str,function(data){
@@ -252,7 +253,7 @@
         payType = t.value;
     }
     /**
-     * TODO 取报告付款处理,弹出框
+     * TODO 取报告付款处理,初次弹出框
      * @param row
      */
     function takePay(row) {
@@ -263,6 +264,23 @@
         $("#checker_div").show();
         $("#discount_change").hide();
         $("#terms_pay_div").hide();
+        fillDialogInfo(row);
+        $("#terms_pay").val(1);
+        $("#dlg").dialog("open");
+    }
+    /**
+     * TODO 取报告填充付费信息,二次弹出弹出框
+     */
+    function secondTakePay() {
+        var row = isSelected("#dg");
+        if(!row) {return;}
+        payType = 1;
+        $("#payed_price_div").hide();
+        $("#discount_price_div").show();
+        $("#plan_pay_div").show();
+        $("#checker_div").hide();
+        $("#discount_change").show();
+        $("#terms_pay_div").show();
         fillDialogInfo(row);
         $("#terms_pay").val(1);
         $("#dlg").dialog("open");
@@ -284,30 +302,20 @@
         $("#dlg").dialog("open");
     }
     /**
-     * TODO 协议结算处理,弹出框
-     * @param row
-     */
-    function hangPay(row) {
-        payType = 3;
-        $("#payed_price_div").hide();
-        $("#discount_price_div").hide();
-        $("#plan_pay_div").hide();
-        $("#checker_div").hide();
-        $("#terms_pay_div").hide();
-        fillDialogInfo(row);
-        $("#terms_pay").val(1);
-    }
-    /**
      * TODO 挂账付费处理,弹出框
      * @param row
      */
     function hangPay(row) {
         payType = 4;
         $("#payed_price_div").hide();
+        $("#discount_price_div").show();
+        $("#plan_pay_div").show();
         $("#checker_div").show();
-        $("#terms_pay_div").hide();
+        $("#discount_change").show();
+        $("#terms_pay_div").show();
         fillDialogInfo(row);
         $("#terms_pay").val(1);
+        $("#dlg").dialog("open");
     }
     /**
      * TODO 退回协议费用处理,弹出框
@@ -316,28 +324,15 @@
     function backPay(row) {
         payType = 5;
         $("#payed_price_div").show();
+        $("#discount_price_div").show();
+        $("#plan_pay_div").show();
         $("#checker_div").show();
-        //填充费用
+        $("#discount_change").hide();
+        $("#terms_pay_div").hide();
         fillDialogInfo(row);
-        $("#terms_pay").val(row.terms_pay);
+        $("#terms_pay").val(1);
+        $("#dlg").dialog("open");
     }
-
-   /* function nowPay(row){                          //立即付款 弹出模态框
-        if(row==null) {
-            row=isSelected("#dg");
-            if(!row) return;
-        }
-        $('#fm').form("load",row);
-        $('#terms_pay').val(1);
-        $("[name='is_reduce']:eq(0)").attr("checked","checked");
-        $('#rc_person').val(row.send_person);
-        $("#plan_pay").val(row.price);
-        $("#payed_price").val(row.payed_price);
-        $("#checker_div").remove();
-        $('#dlg').dialog('open');
-
-        removeReduce();
-    }*/
 
     /**
      * TODO 填充初次处理协议弹出框信息
@@ -347,9 +342,9 @@
         $('#rc_person').val(row.send_person);
         var shouldPay = row.price - row.payed_price - row.discount_price;
         $("#plan_pay").val(shouldPay);
-
         $("[name='is_reduce']:eq(0)").attr("checked","checked");
-        removeReduce();
+        $("#discount_price").val(row.discount_price);
+        $("#plan_pay").attr("readonly",true);
     }
     /**
      * TODO 初次输入费用信息 提交服务器
@@ -357,57 +352,26 @@
     function savePayInfo(){
         var row=isSelected("#dg");
         if(1 == payType ){
-            data["is_pay"] = 1;
-            data["payed"] = 0;
-            data["check_pay"] = "1";
-            data["leader"]=$("#checker").val();
-            url="/NBSystem/index.php/Home/Cost/takePay";
-
+            if(1 == row.is_pay){
+                saveTakePay(row);
+            }else {
+                stepTake(row);
+            }
         }else if(2 == payType){
             saveNowPay(row);
+        }else if(4 == payType){
+            stepHung(row);
         }else if(5 == payType ){
-            data["is_pay"] = 5;
-            data["payed"] = 0;
-            data["check_pay"] = "4";
-            data["leader"]=$("#checker").val();
-            url="/NBSystem/index.php/Home/Cost/backTask";
+           stepBack(row);
         }
-
-
-
-     /*   if(row.is_back == 1){ //退回报告单独梳理
-            url="/NBSystem/index.php/Home/Cost/backTask";
-        } else if($("[name='is_reduce']:checked").val()==1){
-            url="/NBSystem/index.php/Home/Cost/reduce";
-            data["check_pay"]="2";
-            data["leader"]=$("#checker").val();
-        }else{
-            if(is_pay==2){
-                url="<?php echo U('Cost/payNow');?>";
-                data["step"]=1;
-                data["payed"]=1;
-            }else{ //挂账 取报告付款
-                url="<?php echo U('Cost/takePay');?>";
-            }
-
-        }
-        $.post(url,data,function(res) {
-            if(res){
-                showSuccess();
-                $('#dlg').dialog('close');
-                $('#dg').datagrid("reload");
-            }
-            else{
-                showFail();
-            }
-        });*/
     }
     /**
-     * TODO 立即支付全部
+     * TODO 保存立即支付
      */
     function saveNowPay(row){
         var data = {
-            id:row.id,person_pay:$('#rc_person').val(),
+            id:row.id,
+            person_pay:$('#rc_person').val(),
             terms_pay:$('#terms_pay').val(),
             plan_pay:$('#plan_pay').val(),
             discount_price:$("#discount_price").val(),
@@ -418,6 +382,38 @@
         url="/NBSystem/index.php/Home/Cost/nowPay";
         confirmPost("#dg","确认结算么?",url,data,savePayFn);
     }
+    /**
+     * TODO 取报告提交审核
+     */
+    function stepTake(row){
+        var data = {
+            id:row.id,
+            person_pay:$('#rc_person').val(),
+            invoice_num:$("#invoice_num").val(),
+            leader:$("#checker").val()
+        };
+        url="/NBSystem/index.php/Home/Cost/stepTake";
+        confirmPost("#dg","确认结算么?",url,data,savePayFn);
+    }
+    /**
+     * TODO 提交取报告付款付费信息
+     */
+    function saveTakePay(row){
+
+        var data = {
+            id:row.id,
+            person_pay:$('#rc_person').val(),
+            terms_pay:$('#terms_pay').val(),
+            plan_pay:$('#plan_pay').val(),
+            discount_price:$("#discount_price").val(),
+            is_reduce:$("[name='is_reduce']:checked").val(),
+            invoice_num:$("#invoice_num").val(),
+            leader:$("#checker").val()
+        };
+        url="/NBSystem/index.php/Home/Cost/takePay";
+        confirmPost("#dg","确认结算么?",url,data,savePayFn);
+    }
+
     function savePayFn(data){
         if(data){
             showSuccess();
@@ -428,6 +424,36 @@
         }
     }
     /**
+     * todo 审核挂账
+     */
+    function stepHung(row){
+        var data = {
+            id:row.id,
+            person_pay:$('#rc_person').val(),
+            invoice_num:$("#invoice_num").val(),
+            leader:$("#checker").val(),
+            terms_pay:$('#terms_pay').val(),
+            plan_pay:$('#plan_pay').val(),
+            discount_price:$("#discount_price").val(),
+        };
+        url="/NBSystem/index.php/Home/Cost/stepHung";
+        confirmPost("#dg","确认结算么?",url,data,savePayFn);
+    }
+    /**
+     * TODO 返回审核
+     */
+    function stepBack(row){
+        var data = {
+            id:row.id,
+            person_pay:$('#rc_person').val(),
+            invoice_num:$("#invoice_num").val(),
+            leader:$("#checker").val(),
+            plan_pay:$("#plan_pay").val()
+        };
+        url="/NBSystem/index.php/Home/Cost/stepBack";
+        confirmPost("#dg","确认结算么?",url,data,savePayFn);
+    }
+    /**
      * TODO  打折 缴纳费用可填
      */
     function reducePrice(){
@@ -435,17 +461,18 @@
         $("#checker_div").show();
     }
     function removeReduce(){
+        var row = isSelected("#dg");
+        $("#checker_div").hide();
+        var shouldPay = row.price - row.payed_price - row.discount_price;
+        $("#plan_pay").val(shouldPay);
+        $("#discount_price").val(row.discount_price);
         $("#plan_pay").attr("readonly",true);
-        //只用直接付款下面存在隐藏审核人
-        if(2 == payType){
-            $("#checker_div").hide();
-        }
     }
     /**
      * TODO 付费发生变化 折扣框跟随变化
      */
     function payChange(){
-        debugger;
+
         var price = $("#price").val();
         var payedPrice = $("#payed_price").val();
         var planPay = $("#plan_pay").val();
@@ -708,7 +735,7 @@
     <a id="btn_search" class="easyui-linkbutton" plain="true" iconCls="icon-search">搜索</a>
     <?php if($type == 0): ?><a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="bntClickProgress()">处理协议</a><?php endif; ?>
     <?php if($type == 2): ?><a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="checkConfirm()">确认审批</a><?php endif; ?>
-    <?php if($type == 3 or $type == 6): ?><a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="nowPay()">费用结算</a><?php endif; ?>
+    <?php if($type == 3 ): ?><a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="secondTakePay()">费用结算</a><?php endif; ?>
     <?php if($type == 4): ?><a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="bntClickSettle()">费用结算</a><?php endif; ?>
     <?php if($type == 5): ?><!--       <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="bntModifyPrice()">费用修改</a>-->
         <a href="/NBSystem/index.php/Home/Cost/getExcelCost/payed/1"  class="easyui-linkbutton" iconCls="icon-print" plain="true" >Excel导出</a><?php endif; ?>

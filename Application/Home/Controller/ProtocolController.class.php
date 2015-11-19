@@ -2,6 +2,10 @@
 namespace Home\Controller;
 use Think\Controller;
 class ProtocolController extends BaseController {
+    /**
+     * @param string $protocol_num 协议书编号
+     * @param int $type 0正常添加 1填写信息和预委托 2
+     */
     public function addPage($protocol_num='',$type=0){ //预委托归为type等于1
         $protocol='{}';
         $webDB=M('web_config');
@@ -32,6 +36,7 @@ class ProtocolController extends BaseController {
         else if($type==2){
             $protocol=$prgDB->where('protocol_num like "'.$protocol_num.'"')->find();
             $this->assign('id',$protocol['id']);
+            $this->assign('isFinance',$protocol['is_finance']);
         }
 
         if($protocol_num != ''){  //之前选择的样品信息
@@ -125,7 +130,6 @@ class ProtocolController extends BaseController {
                 $rows[$i]["sample_num"]=$sample_num;
                 $rows[$i]['step']=0;
                 $rows[$i]["protocol_num"]=$protocol_num;
-             /*   $rows[$i]["original_price"] = $rows[$i]["price"];*/
                 $s_id=$db_sample->add($rows[$i]);
                 //流程记录
                 $dt_progress['sample_id']=$s_id;

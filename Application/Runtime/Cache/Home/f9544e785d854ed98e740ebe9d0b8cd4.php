@@ -108,6 +108,7 @@
         });
 
         $('.easyui-datebox').datebox('setValue','<?php echo ($today); ?>');
+        $(".datebox :text").removeAttr("readonly");
         $("#deadline").datebox("setValue","");
         $('.my-ul li').click(function(){
             $(this).parent().find('li').removeClass('li-select');

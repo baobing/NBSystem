@@ -133,6 +133,12 @@
                 addBtnClick();
             });
         }
+        //提交财务后的修改模式 可以直接保存
+        if("<?php echo ($type); ?>" == "2" && "<?php echo ($isFinance); ?>" == "1"){
+            $('#save_btn').click(function(){
+                saveBtnClick();
+            });
+        }
         $("#take_type").change(function(){
             if($(this).val()=="邮寄"){
                 $('#mail_table').show();
@@ -191,6 +197,10 @@
             }
         });
     }
+    /**
+     * 保存协议信息
+     * type =2 修改
+     */
     function saveBtnClick(){
         if(!$('#fm').form('validate')) {
             return ;
@@ -218,16 +228,15 @@
                 obj[notEmptyArr[i]] = "/"
             }
         }
-
-        var rowData=$('#p_dg').datagrid('getData');
-        obj["rows"]=rowData["rows"];
-
-
+        //不是修改已经提交此财务的协议
+        if(!("<?php echo ($type); ?>" == "2" && "<?php echo ($isFinance); ?>" == "1")){
+            var rowData=$('#p_dg').datagrid('getData');
+            obj["rows"]=rowData["rows"];
+        }
         var url='/NBSystem/index.php/Home/Protocol/submitProtocol/type/<?php echo ($type); ?>';
         if('<?php echo ($type); ?>'=='2'){
             url='/NBSystem/index.php/Home/Protocol/submitProtocol/type/<?php echo ($type); ?>/id/<?php echo ($id); ?>';
         }
-        debugger;
         $.post(url,obj,function(id){
             if(id){
                 if("<?php echo ($advance); ?>"=="1"){              //预委托提交页面跳转
@@ -460,10 +469,8 @@
                 </table>
             </div>
         </div>
-
-        <div class="panel-outside" >
-            <div >
-            <div style="float: left;width: 85%;">
+        <?php if($isFinance != 1): ?><div class="panel-outside" style="height:195px;" >
+                <div style="float: left;width: 85%;">
     <table id="p_dg" style="width:100%;height: 180px;"
            rownumbers="true"  singleSelect="true"
            title="样品列表"
@@ -490,19 +497,21 @@
     </table>
 </div>
 
-            <div style="width: 15%; float: left;height: 200px;overflow: hidden;">
-                <a  id="add_btn" class="easyui-linkbutton" style="width: 100px;height: 30px;float: right;" >添加样品</a>
-                <div id="del_btn" class="easyui-linkbutton"  onclick="delBtnClick()"
-                     style="width: 100px;height: 30px;margin-top: 15px;float: right;">删除样品</div>
-                <div style="width: 100px;margin-top: 15px;float: right;">
-                    <div style="width: 100px;height: 90px;" class="easyui-panel" title="试验费用">
-                        <input name="price" id="price" style="width: 70px;margin-left: 10px; margin-top: 15px;
+                <div style="width: 100px; float: right;height: 200px;overflow: hidden;">
+                    <a  id="add_btn" class="easyui-linkbutton" style="width: 100px;height: 30px;float: right;" >添加样品</a>
+                    <div id="del_btn" class="easyui-linkbutton"  onclick="delBtnClick()"
+                         style="width: 100px;height: 30px;margin-top: 15px;float: right;">删除样品</div>
+                    <div style="width: 100px;margin-top: 15px;float: right;">
+                        <div style="width: 100px;height: 90px;" class="easyui-panel" title="试验费用">
+                            <input name="price" id="price" style="width: 70px;margin-left: 10px; margin-top: 15px;
                 border-radius: 3px;height: 25px;border: 1px solid #999999;padding-left: 5px;" readonly>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div style="width: 100%;height: 200px;">
+            </div><?php endif; ?>
+
+
+        <div class="panel-outside">
             <div style="float: left">
                 <div class="my-lable">合同编号：</div>
                 <select id="contract_num" name="contract_num"  style="float: left" panelHeight ="auto" >
@@ -515,11 +524,11 @@
                     <?php if(is_array($receive)): $i = 0; $__LIST__ = $receive;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><option value="<?php echo ($vo["name"]); ?>" ><?php echo ($vo["name"]); ?></option><?php endforeach; endif; else: echo "" ;endif; ?>
                 </select><?php endif; ?>
 
-            <?php if($type == 2): ?><a  href='/NBSystem/index.php/Home/Query/protocolPage' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
+            <?php if($type == 2): ?><a  href='/NBSystem/index.php/Home/Query/protocolPage' class="easyui-linkbutton my-btn-right"  data-options="iconCls:'icon-back'"  >取消</a>
                 <?php elseif($type == 1 and $protocol_step == 1): ?>
                 <a  href='/NBSystem/index.php/Home/Query/pageAdvance' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a>
                 <?php else: ?>
-                <a  href='/NBSystem/index.php/Home/Protocol/addPage' class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-back'"  >取消</a><?php endif; ?>
+                <a  href='/NBSystem/index.php/Home/Protocol/addPage' class="easyui-linkbutton my-btn-right"  data-options="iconCls:'icon-back'"  >取消</a><?php endif; ?>
 
             <div id="save_btn"class="easyui-linkbutton my-btn-right" data-options="iconCls:'icon-save'">保存</div>
         </div>

@@ -106,4 +106,15 @@ class QueryController extends BaseController {
         $flg = $db->save($dt);
         $this->ajaxReturn($flg);
     }
+
+    /**
+     * todo 收发室退回给试验人员
+     */
+    public function backToTester(){
+        $db = M("nb_sample");
+        $dt = $db->create();
+        $dt["step"] =  2;
+        $flg = $db->save($dt);
+        $this->ajaxReturn($flg);
+    }
 }

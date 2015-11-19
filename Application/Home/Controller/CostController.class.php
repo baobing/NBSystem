@@ -189,4 +189,14 @@ class CostController extends BaseController {
     public function stepBack(){
         $this->ajaxReturn(D("cost")->stepBack());
     }
+    /**
+     * todo 退回收发室
+     */
+    public function backOffice(){
+
+        $dt["id"] = $_POST["id"];
+        $dt["is_finance"] = 0;
+        $flg = M("nb_protocol")->save($dt);
+        $this->ajaxReturn($flg);
+    }
 }

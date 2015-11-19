@@ -100,8 +100,8 @@
                     });
                 },
                 rowStyler:function(index,row){
-                    if (row.is_finance == 1){
-                        return 'color:green;'; // return inline style
+                    if (row.is_finance == 0){
+                        return 'color:red;'; // return inline style
                     }
                 }
             });
@@ -167,9 +167,6 @@
         if(row==null){
             $.messager.alert("操作提示",'请先选择一行');
             return ;
-        }else if(row.is_back == 1){
-            $.messager.alert("操作提示",'该协议处于退回状态,请在"退回报告"中处理');
-            return ;
         }else if(row.is_finance == 1){
             $.messager.alert("操作提示",'已经转交财务室');
             return ;
@@ -190,17 +187,16 @@
             $.messager.alert("操作提示",'未付款！');
         } else {
 
-            if(row.take_type == "邮寄"){var str="快递编号：<input id='number'>";}
-            else {var str="取报告人姓名：<input id='number' value='"+row.send_person+"'>";}
+            var str="快递编号：<input id='sendNum'></br>";
+            str += "取报告人姓名：<input id='takePerson' value='"+row.send_person+"'>";
             $.messager.confirm("操作提示",str,function(){
-                var data = $("#number").val();
-                var send_data={id:row.id};
+                var sendNum = $("#sendNum").val();
+                var takePerson = $("#takePerson").val();
+                var send_data={id:row.id,send_num:sendNum,take_person:takePerson};
                 if(row.take_type == "邮寄"){
-                    send_data["step"]=7;
-                    send_data["send_num"]=data;
+                    send_data["step"] = 7;
                 }else {
-                    send_data["step"]=6;
-                    send_data["take_person"]=data;
+                    send_data["step"] = 6;
                 }
                 $.post("<?php echo U('Progress/refreshStep');?>",send_data,function(data){
                     if(data){
@@ -271,14 +267,9 @@
         if(row==null){
             $.messager.alert("操作提示",'请先选择一行');
             return;
-        }else if(row.is_finance == 1){
-            $.messager.alert("操作提示",'财务审核阶段不可修改');
-            return;
         }
         location.href='/NBSystem/index.php/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/2';
-        if("<?php echo ($type); ?>"=="2"){
-            location.href='/NBSystem/index.php/Home/Protocol/addPage/protocol_num/'+row.protocol_num+'/type/1';
-        }
+
     }
     function queryBtnClick(){
         var date_from=$('input[name="date_from"]').val();
